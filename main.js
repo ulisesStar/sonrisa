@@ -13,11 +13,20 @@ var morgan = require('morgan');
 //- Rutas
 
 var routes = require('./http/routes');
-var persona = require('./http/routes/routePersona');
-var interes = require('./http/routes/routeInteres');
-var imagen = require('./http/routes/routeImagen');
-var personainteres = require('./http/routes/routePersonaInteres');
-var usuario = require('./http/routes/routeUsuario');
+
+var anecdotas = require('./http/routes/routeAnecdotas');
+var areas = require('./http/routes/routeAreas');
+var campanas = require('./http/routes/routeCampanas');
+var donativo = require('./http/routes/routeDonativo');
+var eventos = require('./http/routes/routeEventos');
+var imagenes = require('./http/routes/routeImagenes');
+var institucion = require('./http/routes/routeInstitucion');
+var pendiente= require('./http/routes/routePendiente');
+var progreso = require('./http/routes/routeProgreso');
+var proyectos = require('./http/routes/routeProyectos');
+var status = require('./http/routes/routeStatus');
+var terminado = require('./http/routes/routeTerminado');
+var usuarios = require('./http/routes/routeUsuarios');
 
 // - Conexion a la base de datos
 
@@ -32,25 +41,36 @@ app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "jade");
 
 app.use(favicon(path.join(__dirname, 'assets', 'favicon.ico')))
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 app.use(flash());
 
 app.use(session({secret: '01f4845/564564/6@@fas588--[[}++', resave: true, saveUninitialized: true}));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 morgan('combined', {skip: function (req, res) { return res.statusCode < 400 }});
 
 app.use('/', routes);
 
-app.use('/', interes);
-app.use('/', persona);
-app.use('/', imagen);
-app.use('/', personainteres);
-app.use('/', usuario);
+app.use('/', anecdotas);
+app.use('/', areas);
+app.use('/', campanas);
+app.use('/', donativo);
+app.use('/', eventos);
+app.use('/', imagenes);
+app.use('/', institucion);
+app.use('/', pendiente);
+app.use('/', progreso);
+app.use('/', proyectos);
+app.use('/', status);
+app.use('/', terminado);
+app.use('/', usuarios);
 
 app.use(lessMiddleware(__dirname + '/assets'));
+app.use(lessMiddleware(__dirname + '/assets/frags'));
 
 app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'http')));

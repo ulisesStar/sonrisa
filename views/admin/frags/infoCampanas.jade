@@ -1,0 +1,23 @@
+md-card(ng-init="Obtenerareas()")
+    md-toolbar
+        .md-toolbar-tools
+            h4 Editar Campañas
+    form(ng-submit="editarCampana(campanas)" layout="column")
+        .nombre(layout="row" flex)
+            h4(ng-if="!editarCampana" flex) {{campanas.id}} {{campanas.nombre}}
+            .edicion(ng-if="editarCampana" flex layout="column")
+                md-input-container(flex)
+                    label Cambiar Nombre
+                    input(ng-model="campanas.nombre")
+                md-input-container(flex)
+                    label Cambiar Descripcion
+                    input(ng-model="campanas.descripcion")
+                md-input-container(flex)
+                    label Cambiar Fecha
+                    input(ng-model="campanas.fecha")
+                md-select(ng-model="campanas.id_areas")
+                    md-option(ng-repeat="area in areas" ng-value="{{area.id}}") {{area.nombre}}
+                md-button(type="submit" ng-if="editarCampana" md-colors="{background: 'green'}")
+                    md-icon save    
+        md-button(ui-sref="campanas" md-colors="{background: 'red'}")
+            md-icon(ng-if="editarCampana") clear

@@ -9,6 +9,11 @@ header {
     }
 }
 
+md-grid-tile{
+    background-size: cover;
+    background-position: center;
+    }
+
 .centro{
     min-height: ~"calc(100vh - 150px)";
 }
@@ -118,4 +123,35 @@ footer{
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px;
 	color: #8898A5;
+}
+
+.proyectos{
+    md-card{
+        height: 100px;
+    }
+}
+
+//estilo para el tamño de las imagenes redondas
+.circle{
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 60px;
+    img{
+        width: 60px;
+        height: 60px;
+    }
+
+}
+
+.nuevoproyecto{
+    .informacionbasica{
+        height: 170px;
+        .selects{
+            display: flex;
+            md-input-container{
+                width: 100%;
+            }
+        }
+    }
 }

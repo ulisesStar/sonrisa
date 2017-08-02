@@ -1,0 +1,52 @@
+md-card
+    md-toolbar
+        .md-toolbar-tools
+            md-icon calendar
+            h1 Agregar un nuevo evento
+            span(flex)
+            md-button(ng-click="nuevoEvento()")
+                md-icon add
+    md-card-content
+            md-card-content
+                form(ng-if="formularioEvento" ng-submit="AgregarEvento(nuevoevento, proyectoCreado)" layout="row")
+                    md-input-container(flex)
+                        label Nombre
+                        input(ng-model="nuevoevento.nombre")
+                    md-input-container(flex)
+                        label Descripcion
+                        input(ng-model="nuevoevento.descripcion")
+                    md-input-container(flex)
+                        label Fecha de inicio
+                        md-datepicker(ng-model="nuevoevento.fecha")
+                    md-button(type="submit" md-colors="{background : 'green'}" )
+                        md-icon save
+            md-list
+                md-list-item.md-2-line(ng-repeat="evento in eventos")
+                    .md-list-item-text
+                        h4 {{evento.nombre}}
+                        p {{evento.id}} - {{evento.descripcion}}
+                    .md-secondary
+                        p {{evento.fecha}}                            
+                        
+     md-toolbar
+         .md-toolbar-tools
+             h1 Agregar Imagenes
+             span(flex)
+     md-card-content()
+         md-card-content(ng-init="asignarDropify()" )
+            form(ng-submit="agregarGrid(foto, proyectoCreado)")
+                .md-padding
+                    input.dropify(type="file" data-default-file="Imagen del producto" ng-model="foto" base-sixty-four-input maxsize="5120" data-max-file-size="600K" accept="image/*" style="padding:0px;")
+                    md-button(md-colors="{background: 'blue'}" type="submit")
+                        md-icon keyboard_tab
+                    
+        md-grid-list(md-cols="4" md-row-height="200px")
+            md-grid-tile(md-colspan="1" md-rowspan="1" md-color="{bakcground: 'black'}" ng-repeat="imagen in imagenes" style="background-image:url({{imagen}})")
+                md-button(ng-click="quitarGrid($index, idImagen)")
+                    md-icon clear
+     md-button(type="submit" md-colors="{background : 'green'}")
+        md-icon save
+        
+  
+                     
+    

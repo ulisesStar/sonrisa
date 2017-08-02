@@ -1,0 +1,86 @@
+{
+    "nombre": "Proyecto Donacion de albergue",
+    "descripcion": "Es un buen proyecto de altruismo",
+    "status_actual": "1",
+    "Status": {
+        "Pendiente": {
+            "objetivos": "Esto es un proyecto que tiene que recolectar",
+            "tareas": "Bla",
+            "numero_voluntarios": "100",
+            "fecha_inicio": null
+        },
+        "Progreso": {
+            "reportes_avance": null,
+            "fechas_avance": null
+        },
+        "Terminado": {
+
+            "resultados": null,
+            "duracion": null
+        }
+    }
+}
+_________________________________________________________
+
+routeProyectos.route('/data/CrearProyectoPendiente')
+        .post(x.CrearConStatusPendiente);
+
+routeProyectos.route('/data/CrearProyectoProgreso')
+        .post(x.CrearConStatusProgreso);
+
+routeProyectos.route('/data/CrearProyectoTerminado')
+        .post(x.CrearConStatusTerminado);
+
+______________________________________________________
+ex.CrearConStatusPendiente = function(req, res, next) {
+
+    var data = req.body;
+    proyectos.create(data,{
+        include: [
+            {
+                model: status,
+             
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            }
+        ]
+    }).then(function(result) {
+        res.status(200).jsonp(result);
+    });
+};
+_____________________________________________________
+ex.Proyecto = function(req, res, next) {
+
+    var id = req.params.id;
+
+    if (id) {
+        proyectos.findById(id, {
+            include: [
+                {
+                    model: status,
+                    include: [
+                        {
+                            model: pendiente,
+                        },
+                        {
+                            model: progreso,
+                        },
+                        {
+                            model: terminado,
+                        }
+                    ],
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                }
+            ]
+        }).then(function(x) {
+            res.status(200).jsonp(x);
+        });
+    } else {
+        proyectos.findAll().then(function(x) {
+            res.status(200).jsonp(x);
+        });
+    }
+};

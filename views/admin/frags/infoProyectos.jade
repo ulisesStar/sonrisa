@@ -1,0 +1,13 @@
+md-card
+    form(ng-submit="editarProyecto(proyecto)" layout="row")
+        .titulo(layout="row" flex)
+            h4(ng-if="!editarProyecto" flex) {{proyectos.id}} {{proyectos.nombre}}
+            .edicion(ng-if="editarProyecto" flex layout="row")
+                md-input-container(flex)
+                    label Cambiar el nombre
+                    input(ng-model="proyectos.nombre")
+                md-button(ng-if="editarProyecto" md-colors="{background: 'green'}" ui-sref="proyectos")
+                    md-icon save
+        md-button(ng-click="editarProyecto = !editarProyecto" md-colors="editarProyecto ? {background: 'red'} : {background: 'green'}")
+            md-icon(ng-if="!editarProyecto") edit
+            md-icon(ng-if="editarProyecto") clear

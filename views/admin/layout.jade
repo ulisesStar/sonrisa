@@ -16,18 +16,16 @@ block content
 				div(flex layout="row" layout-align="end center")
 					md-button(href="/")
 						md-icon.material-icons exit_to_app
-		div(layout="row")
-			md-sidenav.md-sidenav-left(md-component-id="left" md-disable-backdrop md-whiteframe="4")
+		div(layout="row" layout-align="center center")
+			md-sidenav.md-sidenav-left(md-component-id="left" md-whiteframe="4")
 				md-toolbar
 					.md-toolbar-tools
 						md-button(ng-click="toggleLeft()") cerrar
 				md-list
-					md-list-item(ui-sref="home" ng-click="toggleLeft()")
-						md-icon home
+					md-list-item(ui-sref="{{seccion.href}}" ng-click="toggleLeft()" ng-repeat="seccion in secciones")
+						md-icon {{seccion.icon}}
 						.md-list-item-text
-							h4 home
-					md-list-item(ui-sref="contactos" ng-click="toggleLeft()")
-						md-icon person
-						.md-list-item-text
-							h4 Lista de contactos
-			main(ui-view="main" class="page" flex)
+							h4 {{seccion.nombre}}
+							
+			div(flex="70" flex-md="80" flex-sm="90" flex-xs="100")
+				main.page(ui-view="main")

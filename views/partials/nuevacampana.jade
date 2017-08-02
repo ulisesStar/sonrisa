@@ -1,0 +1,14 @@
+md-card(ng-init="Obtenerareas()")
+    h1 Nueva Campaña
+    md-card-content(layout="column")
+        md-input-container
+            label Nombre
+            input(ng-model="campana.nombre")
+        md-input-container
+            label Descripcion
+            input(ng-model="campana.descripcion")
+        md-select(ng-model="campana.id_areas")
+            md-option(ng-repeat="area in areas" ng-value="{{area.id}}") {{area.nombre}}
+            input(ng-model="campana.descripcion")
+        md-button(type="submit" ng-click="nuevaCampana()")
+            md-icon add

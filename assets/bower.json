@@ -1,5 +1,5 @@
 {
-  "name": "assets",
+  "name": "Starnode",
   "description": "",
   "main": "",
   "license": "MIT",
@@ -22,6 +22,8 @@
     "react": "15.4.1",
     "scrollmagic": "ScrollMagic#^2.0.5",
     "ngReact": "0.4.0",
-    "angular-ui-router": "1.0.3"
+    "angular-ui-router": "1.0.3",
+    "dropify": "^0.2.2",
+    "angular-base64-upload": "^0.1.22"
   }
 }

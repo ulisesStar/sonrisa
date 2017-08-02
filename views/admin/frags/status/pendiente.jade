@@ -1,0 +1,19 @@
+
+md-card(layout="column")
+    h1 Pendiente    
+    md-card-content(layout="column")
+        md-input-container(flex)
+            label Objetivos
+            input(ng-model="pendiente.objetivo") 
+        md-input-container(flex)
+            label Tareas
+            input(ng-model="pendiente.tareas")        
+        md-input-container(flex)    
+            label Numero de Voluntarios
+            input(ng-model="pendiente.voluntarios")
+        md-input-container(flex)    
+            label Fecha de Inicio
+            input(ng-model="pendiente.fecha")
+    
+//- include ../eventos
+//- include ../imagenes

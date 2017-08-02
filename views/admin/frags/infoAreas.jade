@@ -1,0 +1,18 @@
+md-card
+    md-toolbar
+        .md-toolbar-tools
+            h4 Editar Areas
+    form(ng-submit="editarArea(areas)" layout="row")
+        .nombre(layout="row" flex)
+            h4(ng-if="!editarArea" flex) {{areas.id}} {{areas.nombre}}
+            .edicion(ng-if="editarArea" flex layout="row")
+                md-input-container(flex)
+                    label Cambiar el nombre
+                    input(ng-model="areas.nombre")
+                md-button(type="submit" ng-if="editarArea" md-colors="{background: 'green'}")
+                    md-icon save
+        md-button(ui-sref="areas" md-colors="{background: 'red'}")
+            //md-icon(ng-if="!editarArea") edit
+            md-icon(ng-if="editarArea") clear
+            
+    

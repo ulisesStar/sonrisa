@@ -14,6 +14,11 @@ router.get("/admin/:url", function(req, res) {
     res.render("admin/frags/" + page);
 })
 
+router.get("/admin/status/:url", function(req, res) {
+    var page = req.params.url
+    res.render("admin/frags/status/" + page);
+})
+
 router.all('/:action', function(req, res){
 })
 
@@ -48,8 +53,6 @@ router.get("/user/:url", function(req, res) {
 router.get("/partials/:part", function(req, res) {
 	var partial = req.params.part
     res.render("partials/" + partial );
-    let error_message = req.flash('error')[0];
-    res.locals.error_message = error_message;
 })
 
 module.exports = router;

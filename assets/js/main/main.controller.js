@@ -1,7 +1,7 @@
 app.controller('mainCtrl', function ($scope, $rootScope, $http, mdDialog) {
 
     $scope.iniciosesion = function (ev) {
-        mdDialog.mostrardialog('login', $scope.customFullscreen, ev);
+        mdDialog.mostrardialog('mainCtrl', 'login', $scope.customFullscreen, ev);
     };
 
     $scope.botones = [{
