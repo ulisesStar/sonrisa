@@ -1,13 +1,24 @@
-md-card
-    form(ng-submit="editarProyecto(proyecto)" layout="row")
-        .titulo(layout="row" flex)
-            h4(ng-if="!editarProyecto" flex) {{proyectos.id}} {{proyectos.nombre}}
-            .edicion(ng-if="editarProyecto" flex layout="row")
-                md-input-container(flex)
-                    label Cambiar el nombre
-                    input(ng-model="proyectos.nombre")
-                md-button(ng-if="editarProyecto" md-colors="{background: 'green'}" ui-sref="proyectos")
-                    md-icon save
-        md-button(ng-click="editarProyecto = !editarProyecto" md-colors="editarProyecto ? {background: 'red'} : {background: 'green'}")
-            md-icon(ng-if="!editarProyecto") edit
-            md-icon(ng-if="editarProyecto") clear
+.proyecto(ng-init="obtenerProyecto()")
+    div(layout="row")
+        .navegador(flex="10")
+            .navegador-container
+                md-card
+                    md-button(ui-sref="proyecto.info" ui-sref-active="active")
+                        md-icon info
+                    md-divider
+                    md-button(ui-sref="proyecto.eventos" ui-sref-active="active")
+                        md-icon date_range
+                    md-divider
+                    md-button(ui-sref="proyecto.ubicaciones" ui-sref-active="active")
+                        md-icon location_on
+                    md-divider
+                    md-button(ui-sref="proyecto.materiales" ui-sref-active="active")
+                        md-icon build
+                    md-divider
+                    md-button(ui-sref="proyecto.imagenes" ui-sref-active="active")
+                        md-icon photo
+                md-card
+                    md-button(md-colors="{background: 'red'}" ng-click="eliminarProyecto(id)")
+                        md-icon clear
+        div(flex="90" layout="column")
+            main(ui-view="main")

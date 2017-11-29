@@ -14,14 +14,13 @@
             flex)
                 md-item-template
                     span {{item.nombre}}
-            md-button(md-colors="{background: 'green'}" ui-sref="nuevoproyecto")
+            md-button(md-colors="{background: 'green'}" ui-sref="paso1")
                 md-icon add
-    md-toolbar
-        .md-toolbar-tools
-            h4 Lista de Proyectos Actuales
-    md-card-content(layout="column")
+    md-card
+        md-toolbar
+            .md-toolbar-tools
+                h4 Lista de Proyectos Actuales
         md-list
-            md-list-item(ng-repeat="proyecto in proyectos | filter: ctrl.searchTextProyecto" ui-sref="proyecto({idProyecto:proyecto.id})")
-                .md-list-item-tex
-                    h1 {{proyecto.id}}
-                    h4 {{proyecto.nombre}}
+            md-list-item.md-2-line(ng-repeat="proyecto in proyectos | filter: ctrl.searchTextProyecto" ui-sref="proyecto({idProyecto:proyecto.id})")
+                .md-list-item-text
+                    p {{proyecto.nombre}}

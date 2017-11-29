@@ -26,7 +26,7 @@ ex.delete = function (req, res, next){
 ex.update = function(req, res, next){
     var id = req.params.id;
     var data = req.body;
-    
+
     pendiente.update(data,{
         where: {
             id: id
@@ -48,9 +48,14 @@ ex.read = function (req, res, next) {
                     res.status(200).jsonp(pendiente);
                 });
     } else {
-        pendiente.findAll()
-                .then(function (pendientes) {
-                    res.status(200).jsonp(pendientes);
-                });
+        pendiente.findAll({
+            include: [{all:true}]
+        })
+        .then(res.send.bind(res))
+        .catch(next);
+        /*campanas.findAll()
+                .then(function (campanas) {
+                    res.status(200).jsonp(campanas);
+                });*/
     }
 };

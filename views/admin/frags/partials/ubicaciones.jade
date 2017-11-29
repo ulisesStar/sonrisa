@@ -1,0 +1,46 @@
+section.ubicaciones
+    .titulo
+        md-icon.icon location_on
+        h2 Centros de Acopio
+        md-button(ng-click="formularioUbicacion = !formularioUbicacion" md-colors="formularioUbicacion ? {background: 'red'} : {background: 'green'}")
+            md-icon(ng-if="!formularioUbicacion" ng-click="crearUbicacion()") add
+            md-icon(ng-if="formularioUbicacion" ng-click="crearUbicacion()") clear
+    md-card
+        .creacion
+            form(ng-if="formularioUbicacion" ng-submit="submitUbicacion(ubicacion, proyecto.id)" layout="column")
+                md-input-container(flex)
+                    label Nombre
+                    input(ng-model="ubicacion.nombre")
+                md-input-container(flex)
+                    label Dirección
+                    input(ng-model="ubicacion.direccion")
+                div(layout="row" flex)
+                    md-input-container(flex)
+                        label Latitud
+                        input(ng-model="ubicacion.latitude")
+                    md-input-container(flex)
+                        label Altitud
+                        input(ng-model="ubicacion.longitude")
+                div(layout="row" flex)
+                    md-input-container(flex)
+                        label Horario de Apertura
+                        input(ng-model="ubicacion.apertura")
+                    md-input-container(flex)
+                        label Horario de Cierre
+                        input(ng-model="ubicacion.cierre")
+                    md-input-container(flex)
+                        label Periodo
+                        md-datepicker(ng-model="ubicacion.periodo" md-hide-icons="triangle")
+                md-button(type="submit" md-colors="{background: 'green'}")
+                    md-icon save
+    md-card
+        div(layout="column")
+            .mapa(style="height: 300px")
+                ui-gmap-google-map(center='{latitude: 19.1847524, longitude: -96.1550328}' zoom='11')
+                    ui-gmap-marker(coords="marker" idkey="$index" ng-repeat="marker in markers")
+            md-list(flex)
+                md-list-item.md-2-line(ng-repeat="ubicacion in ubicaciones" ng-click="seleccionar(ubicacion)")
+                    .md-list-item-text
+                        h4 {{ubicacion.nombre}}
+                        p {{ubicacion.direccion}}
+            

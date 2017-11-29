@@ -1,0 +1,14 @@
+.ubicacion(flex)
+	.title
+		md-icon location_on
+		.title-content
+			h2 Ubicaciones
+			p Localiza los centros de ayuda
+	md-card
+		md-list
+			md-list-item(ng-repeat="ubicacion in proyecto.Ubicacion")
+				.md-list-item-text
+					p {{ubicacion.nombre}}
+		.mapa(style="height: 300px")
+			ui-gmap-google-map(center='map.center' zoom='map.zoom')
+				ui-gmap-marker(coords="marker" idkey="$index" ng-repeat="marker in markers")

@@ -12,87 +12,234 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		url: '/',
 		views: {
 			'main': {
-				templateUrl: '/main/home'
+				templateUrl: '/main/home',
+				controller: 'homeCtrl as ctrl'
 			}
-		}
-	}).state('user', {
-		url: '/user',
-		views: {
-			'main': {
-				templateUrl: '/user/main'
-			}
-		}
-	}).state('user.profile', {
-		url: '/profile',
-		views: {
-			'main': {
-				templateUrl: '/user/profile'
-			}
-		}
-	}).state('user.paymentstatus', {
-		url: '/paymentstatus',
-		views: {
-			'main': {
-				templateUrl: '/main/user/paymentstatus'
-			}
-		}
-	}).state('user.paymentmethod', {
-		url: '/metododepago',
-		views: {
-			'main': {
-				templateUrl: '/main/user/paymentmethod'
-			}
-		}
-	}).state('user.historical', {
-		url: '/pagohistorico',
-		views: {
-			'main': {
-				templateUrl: '/main/user/historical'
-			}
-		}
-	}).state('persona', {
-		url: '/persona/:idPersona',
-		views: {
-			'main': {
-				templateUrl: '/catalogo/persona',
-				controller: function ($scope, $stateParams, $http) {
-					var idPersona = $stateParams.idPersona;
-					$http.get('/data/personasData/' + idPersona ).then(function(persona){
-						// album.persona = persona.data;
-						$scope.personaSeleccionada = persona.data;
-						console.log($scope.personaSeleccionada);
-					});
+		},
+        resolve: {
+			login: function($window, AuthService, $localStorage, Usuario, Session){
+				if($window.location.pathname.length > 10){
+					var url = $window.location.pathname;
+					var token = url.split('/');
+					Usuario.token(token[1]).then(data => {
+						Session.create(token[1]);
+						$window.location.pathname = '';
+					})
 				}
-
+			},
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozHome']);
+                }
+            ]
+        }
+	})
+	.state('home.primero', {
+		url: 'primero',
+		views: {
+			'home': {
+				templateUrl: '/main/home/primero'
+			}
+		},
+		resolver: {
+			login: function($window, AuthService, $localStorage, Usuario, Session){
+				if($window.location.pathname.length > 10){
+					var url = $window.location.pathname;
+					var token = url.split('/');
+					Usuario.token(token[1]).then(data => {
+						Session.create(token[1]);
+						$window.location.pathname = '';
+					})
+				}
 			}
 		}
-	}).state('yellow', {
-		url: '/yellow',
+	})
+	.state('home.segundo', {
+		url: 'segundo',
+		views: {
+			'home': {
+				templateUrl: '/main/home/segundo'
+			}
+		}
+	})
+	.state('home.tercero', {
+		url: 'tercero',
+		views: {
+			'home': {
+				templateUrl: '/main/home/tercero'
+			}
+		}
+	})
+	.state('loginyregistro', {
+		url: '/loginyregistro',
 		views: {
 			'main': {
-				templateUrl: '/colors/yellow'
+				templateUrl: '/main/loginyregistro'
 			}
 		}
-	}).state('purple', {
-		url: '/purple',
+	})
+	.state('nosotros', {
+		url: '/nosotros',
 		views: {
 			'main': {
-				templateUrl: '/colors/purple'
+				templateUrl: '/main/nosotros',
+				controller: 'nosotrosCtrl as ctrl'
 			}
-		}
-	}).state('blue', {
-		url: '/blue',
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozNosotros']);
+                }
+            ]
+        }
+	})
+	.state('tyc', {
+		url: '/tyc',
 		views: {
 			'main': {
-				templateUrl: '/colors/blue'
+				templateUrl: '/main/tyc'
 			}
 		}
-	}).state('green', {
-		url: '/green',
+	})
+	.state('programa', {
+		url: '/nosotros/programa',
+		params: {
+			'campana' : null
+		},
 		views: {
 			'main': {
-				templateUrl: '/colors/green'
+				templateUrl: '/main/programa',
+				controller: 'nosotrosCtrl as ctrl'
+			}
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozNosotros']);
+                }
+            ]
+        }
+	})
+	.state('proyectos', {
+		url: '/proyectos',
+		views: {
+			'main': {
+				templateUrl: '/proyectos/proyectos',
+				controller: 'proyectosCtrl as ctrl'
+			}
+		},
+        resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozProyectos']);
+                }
+            ]
+        }
+	})
+	.state('proyectos.vista1', {
+		url: '/vista1',
+		views: {
+			'main': {
+				templateUrl: '/main/vistas/vista1'
 			}
 		}
+	}).state('proyectos.vista2', {
+		url: '/vista2',
+		views: {
+			'main': {
+				templateUrl: '/main/vistas/vista2'
+			}
+		}
+	})
+	.state('registro', {
+		url: '/registro',
+		views: {
+			'main': {
+				templateUrl: '/main/registro'
+			}
+		}
+	}).state('perfil', {
+		url: '/perfil',
+		views: {
+			'main': {
+				templateUrl: '/main/perfil',
+				controller: 'perfilCtrl as ctrl'
+			}
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozPerfil']);
+                }
+            ]
+        }
+	}).state('pendiente', {
+		url: '/pendiente/:proyecto/:nombre',
+		params: {
+			'proyecto' : null,
+			'nombre' : null
+		},
+		views: {
+			'main': {
+				templateUrl: '/proyectos/Pendiente',
+				controller: 'proyectosPendientesCtrl as ctrl'
+			}
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozProyectosPendientes']);
+                }
+            ]
+        }
+	}).state('progreso', {
+		url: '/progreso/:proyecto/:nombre',
+		params: {
+			'proyecto' : null,
+			'nombre' : null
+		},
+		views: {
+			'main': {
+				templateUrl: '/proyectos/Progreso',
+				controller: 'proyectosProgresosCtrl as ctrl'
+			}
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozProyectosProgreso']);
+                }
+            ]
+        }
+	}).state('terminado', {
+		url: '/terminado/:proyecto/:nombre',
+		params: {
+			'proyecto' : null,
+			'nombre' : null
+		},
+		views: {
+			'main': {
+				templateUrl: '/proyectos/Terminado',
+				controller: 'proyectosTerminadoCtrl as ctrl'
+			}
+		},
+		resolve: {
+            loadMyCtrl: [
+                '$ocLazyLoad',
+                function($ocLazyLoad) {
+                    return $ocLazyLoad.load(['ozProyectosTerminado']);
+                }
+            ]
+        }
 	});
+
+
 }]);

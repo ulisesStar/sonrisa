@@ -12,4 +12,9 @@ routeAnecdotas.route('/data/anecdota/:id')
         .put(x.update)
         .delete(x.delete);
 
+routeAnecdotas.route('/data/anecdotaproyecto/:id')
+        .get(x.anecdotaproyecto);
+
+
+
 module.exports = routeAnecdotas;

@@ -7,8 +7,14 @@ routeAreas.route('/data/areas')
         .get(x.read)
         .post(x.create);
 
+routeAreas.route('/data/areasLite')
+        .get(x.areasLite);
+
 routeAreas.route('/data/areasAll')
 		.get(x.areasAll);
+
+routeAreas.route('/data/areas/:idareas/:idproyectos')
+        .post(x.CrearConArea);
 
 routeAreas.route('/data/areas/:id')
         .get(x.read)

@@ -9,6 +9,8 @@ var ex = function(conector) {
         descripcion: Sequelize.STRING,
         status_actual: Sequelize.INTEGER,
         campana_actual: Sequelize.INTEGER,
+        area_actual: Sequelize.INTEGER,
+        ubicacion_actual: Sequelize.INTEGER,
 
     })
 

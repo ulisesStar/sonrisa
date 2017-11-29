@@ -24,6 +24,11 @@
     "ngReact": "0.4.0",
     "angular-ui-router": "1.0.3",
     "dropify": "^0.2.2",
-    "angular-base64-upload": "^0.1.22"
+    "angular-base64-upload": "^0.1.22",
+    "oclazyload": "ocLazyLoad#^1.1.0",
+    "ngstorage": "^0.3.11",
+    "angular-google-maps": "^2.4.1",
+    "konva": "^1.6.8",
+    "axios": "^0.16.2"
   }
 }

@@ -1,0 +1,33 @@
+section.eventos
+    .titulo
+        md-icon.icon date_range
+        h2 Eventos
+    md-card
+        .creacion
+            form(ng-submit="submitEvento(evento, proyecto.status_actual, proyecto.id)" layout="column")
+                .opciones
+                    md-button(type="submit" md-colors="{background : 'green'}" ng-if="formularioEvento")
+                        md-icon save
+                    md-button(ng-click="formularioEvento = !formularioEvento" md-colors="formularioEvento ? {background: 'red'} : {background: 'green'}")
+                        md-icon(ng-if="!formularioEvento" ng-click="crearEvento()") add
+                        md-icon(ng-if="formularioEvento") clear
+                .creacion-content(ng-if="formularioEvento" layout="column" flex)
+                    md-input-container(flex)
+                        md-icon label
+                        label Nombre del evento
+                        input(ng-model="evento.nombre")
+                    md-input-container(flex)
+                        md-icon line_weight
+                        label Descripcion
+                        textarea(ng-model="evento.descripcion" md-maxlength="150" rows="5")
+                    md-input-container(flex)
+                        label Fecha de inicio
+                        md-datepicker(ng-model="evento.fecha")
+    md-card
+        md-card-content(layout="row")
+            md-list(flex)
+                md-list-item(ng-repeat="evento in eventos" ng-click="seleccionar(evento)")
+                    .md-list-item-text
+                        h4 {{evento.nombre}}
+                        
+            

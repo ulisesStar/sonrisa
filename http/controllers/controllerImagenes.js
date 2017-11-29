@@ -1,3 +1,6 @@
+var _ = require('lodash');
+var Jimp = require("jimp");
+
 var db = require('../relations');
 var imagenes = db.imagenes;
 var proyectos = db.proyectos;
@@ -24,7 +27,7 @@ ex.ImagenProyecto = function(req, res, next){
         imagen: data,
         id_pendiente: IdPendiente,
         id_progreso: IdProgreso,
-        id_Terminado: IdTerminado,
+        id_terminado: IdTerminado,
     }).then(function (result) {
         res.status(200).jsonp(result);
     });
@@ -55,6 +58,57 @@ ex.update = function(req, res, next){
     });
 };
 
+ex.imagenesProyectosStatus = function(req, res, next){
+
+    var idstatus = req.params.IdStatus;
+    var idproyecto = req.params.IdProyecto;
+
+    // console.log(idstatus);
+
+    if(idstatus == 1){
+        var busqueda = {
+            where:{
+                id_pendiente: idproyecto
+            }
+        }
+    }
+    else
+        if(idstatus == 2){
+            var busqueda = {
+                where:{
+                    id_progreso: idproyecto
+                }
+            }
+        }
+        else
+            if(idstatus == 3){
+                var busqueda = {
+                    where:{
+                        id_terminado: idproyecto
+                    }
+                }
+            }
+
+    imagenes.findAll(busqueda).then(function (imagenes) {
+
+        var index = 0;
+
+        imagenes.forEach(imagen => {
+            // console.log(imagen.id)
+            var nuevaimagen = _.split(imagen.imagen, ',', 2);
+            Jimp.read(Buffer.from(nuevaimagen[1], 'base64'), function(err, image) {
+                image.resize(502, 300).getBase64("image/jpeg", (err, Buff) => {
+                    imagen.imagen = Buff;
+                    index++;
+                    if(index === imagenes.length){
+                        res.status(200).jsonp(imagenes);
+                    }
+                });
+            });
+        })
+    });
+}
+
 
 ex.read = function (req, res, next) {
 
@@ -71,4 +125,29 @@ ex.read = function (req, res, next) {
                     res.status(200).jsonp(imagenes);
                 });
     }
+};
+
+ex.crearPortada = function(req, res, next){
+    var id = req.params.IdImagen;
+
+    imagenes.findById(id).then(function(imagenes){
+        imagenes.update({portada:'1'}).then(function(imagenes){
+            res.status(200).jsonp(imagenes);
+        });
+    });
+};
+
+ex.borrarPortada = function(req, res, next){
+    var IdProyecto = req.params.IdProyecto;
+
+    var busca = {
+        where: {
+            $or:[{id_pendiente: IdProyecto}, {id_progreso: IdProyecto}, {id_terminado: IdProyecto}]
+        }
+    }
+    imagenes.findAll(busca).then(function(imagenes){
+        imagenes.forEach(imagen => imagen.update({portada:'0'}))
+        }).then(function(imagenes){
+            res.status(200).jsonp(imagenes);
+});
 };

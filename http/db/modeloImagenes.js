@@ -5,7 +5,15 @@ var ex = function(conector) {
 
     var Imagenes = sequelize.define('Imagenes', {
         id:{ type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
-        imagen: Sequelize.BLOB('medium'),
+        imagen: {
+            type: Sequelize.BLOB('medium'),
+            get() {
+                var imagenBin = this.getDataValue('imagen');
+                var Imagenes = new Buffer(imagenBin).toString('ascii');
+                return Imagenes
+            },
+        },
+        portada: Sequelize.INTEGER
     })
 
     return Imagenes;

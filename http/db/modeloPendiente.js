@@ -7,8 +7,6 @@ var ex = function(conector) {
         id:{ type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
         objetivos: Sequelize.STRING,
         tareas: Sequelize.STRING,
-        numero_voluntarios: Sequelize.INTEGER,
-        fecha_inicio: Sequelize.DATE,
     })
 
     return Pendiente;

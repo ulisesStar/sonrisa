@@ -1,39 +1,62 @@
-app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeout, $mdSidenav, alertas, $state) {
+app.controller('adminCtrl', function($scope, $rootScope, $http, $mdDialog, mdDialog, $timeout, $stateParams, $mdSidenav, alertas, $state, Area, Campana, Proyectos, Imagen, Material, Ubicacion) {
 
     $scope.cambiar = function(status) {
         switch (status) {
             case 1:
-
-                $state.go('nuevoproyecto.pendiente')
+                $state.go('paso1.pendiente')
                 break;
             case 2:
-                $state.go('nuevoproyecto.progreso')
+                $state.go('paso1.progreso')
                 break;
             case 3:
-                $state.go('nuevoproyecto.terminado')
+                $state.go('paso1.terminado')
                 break;
             default:
 
         }
     }
 
-    $scope.secciones = [{
-        nombre: 'home',
-        href: 'home',
-        icon: 'home'
-    }, {
-        nombre: 'Proyectos',
-        href: 'proyectos',
-        icon: 'work'
-    }, {
-        nombre: 'Areas',
-        href: 'areas',
-        icon: 'folder'
-    }, {
-        nombre: 'Campañas',
-        href: 'campanas',
-        icon: 'folder'
-    }]
+    $scope.obtenerProyecto = function() {
+        	console.log('Estoy funcionando');
+
+        // Proyectos.obtenerQ().then(function(data) {
+        //     console.log('Estoy funcionando 2');
+        //     console.log(data)
+        //     $scope.proyectos = data;
+        //     console.log($scope.proyectos);
+        // })
+
+        Proyectos.obtener().then(function(data) {
+			console.log('Estoy funcionando 2');
+            let info = data.data;
+            console.log(info)
+            $scope.proyectos = data.data;
+            console.log($scope.proyectos);
+            $scope.$digest();
+        });
+
+
+    }
+
+    $scope.secciones = [
+        {
+            nombre: 'home',
+            href: 'home',
+            icon: 'home'
+        }, {
+            nombre: 'Proyectos',
+            href: 'proyectos',
+            icon: 'work'
+        }, {
+            nombre: 'Areas',
+            href: 'areas',
+            icon: 'folder'
+        }, {
+            nombre: 'Programas',
+            href: 'campanas',
+            icon: 'folder'
+        }
+    ]
 
     $scope.toggleLeft = buildToggler('left');
 
@@ -43,21 +66,10 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
         };
     }
 
-    $scope.dropify = function() {
-        $('.dropify').dropify({
-            messages: {
-                default: 'Agregar',
-                replace: 'Reemplazar',
-                remove: 'Eliminar',
-                error: 'Error'
-            }
-        });
-    };
-
-    $scope.proyecto = []
-    $scope.pendiente = []
-    $scope.progreso = []
-    $scope.terminado = []
+    $scope.proyecto = {}
+    $scope.pendiente = {}
+    $scope.progreso = {}
+    $scope.terminado = {}
 
     $scope.IngresarProyecto = function() {
         console.log($scope.proyecto.status_actual)
@@ -68,12 +80,12 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
                     "descripcion": $scope.proyecto.descripcion,
                     "status_actual": $scope.proyecto.status_actual,
                     "campana_actual": $scope.proyecto.Id_campana,
+                    "area_actual": $scope.proyecto.Id_area,
+                    "id_campanas": $scope.proyecto.Id_campana,
                     "Status": $scope.pendientes = {
                         "Pendiente": $scope.pendientes = {
                             "objetivos": $scope.pendiente.objetivo,
-                            "tareas": $scope.pendiente.tareas,
-                            "numero_voluntarios": $scope.pendiente.voluntarios,
-                            "fecha_inicio": $scope.pendiente.fecha
+                            "tareas": $scope.pendiente.tareas
                         },
                         "Progreso": {},
                         "Terminado": {}
@@ -87,6 +99,8 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
                     "descripcion": $scope.proyecto.descripcion,
                     "status_actual": $scope.proyecto.status_actual,
                     "campana_actual": $scope.proyecto.Id_campana,
+                    "area_actual": $scope.proyecto.Id_area,
+                    "id_campanas": $scope.proyecto.Id_campana,
                     "Status": $scope.progreso = {
                         "Pendiente": {},
                         "Progreso": $scope.progreso = {
@@ -104,6 +118,8 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
                     "descripcion": $scope.proyecto.descripcion,
                     "status_actual": $scope.proyecto.status_actual,
                     "campana_actual": $scope.proyecto.Id_campana,
+                    "area_actual": $scope.proyecto.Id_area,
+                    "id_campanas": $scope.proyecto.Id_campana,
                     "Status": $scope.terminado = {
                         "Pendiente": {},
                         "Progreso": {},
@@ -122,34 +138,22 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
         var proyectos = $scope.proyectos;
         console.log(proyectos);
 
-        $http.post('/data/CrearProyecto', proyectos).success(function(data) {
-            console.log(data)
-
-            $state.go('nuevoproyecto.eventoseimagenes');
-
+        Proyectos.crear(proyectos).then(function(data) {
             $scope.proyectoCreado = data;
-
-            var idcampanas = $scope.proyectoCreado.campana_actual;
-            var idproyectos = $scope.proyectoCreado.id;
-
-            $http.post('/data/campanas/' + idcampanas + '/' + idproyectos).success(function(data) {
-                console.log(data)
-            }).error(function(err) {
-                console.log(err)
+            Area.unir($scope.proyectoCreado.area_actual, $scope.proyectoCreado.id).then(function(data) {
+                console.log(data);
             })
-
-        }).error(function(err) {
-            console.log(err)
+            //$state.go('paso2', {'idProyecto': data.id});
+            $state.go('proyectos')
         })
-
     };
-
-    $scope.eventos = [];
-
-    $scope.nuevoEvento = function() {
+    $scope.AbrirEvento = function() {
         $scope.formularioEvento = true;
     }
-
+    $scope.CerrarEvento = function() {
+        $scope.formularioEvento = false;
+    }
+    $scope.eventos = [];
     $scope.AgregarEvento = function(evento, proyectoCreado) { //AGREGA UN EVENTO A UN PROYECTO YA CREADO
 
         console.log(proyectoCreado);
@@ -184,59 +188,145 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
 
     }
 
-    $scope.obtenerProyecto = function() {
+    $scope.Abrir = function() {
+        $scope.formularioMaterial = true;
+    }
+    $scope.Cerrar = function() {
+        $scope.formularioMaterial = false;
+    }
 
-        $http.get('/data/proyectos').success(function(data) {
-            $scope.proyectos = data;
-            console.log($scope.proyectos);
-        }).error(function(err) {
-            console.log(err)
+    $scope.materiales = [];
+
+    $scope.AgregarMaterial = function(material, proyectoCreado) {
+        console.log(proyectoCreado.id);
+        console.log(material);
+        material.id_proyecto = proyectoCreado.id;
+        Material.crear(material).then(function(data) {
+            $scope.formularioMaterial = false;
+            $scope.materiales.push(data);
+            console.log(data);
+        })
+
+    }
+
+    $scope.AbrirUbicacion = function() {
+        $scope.formularioUbicacion = true;
+    }
+    $scope.CerrarUbicacion = function() {
+        $scope.formularioUbicacion = false;
+    }
+
+    $scope.ubicaciones = [];
+
+    $scope.nuevaUbicacion = function(ubicacion) {
+        var ubicaciones = {
+            nombre: ubicacion.nombre,
+            latitud: ubicacion.latitud,
+            altitud: ubicacion.altitud,
+            direccion: ubicacion.direccion,
+            apertura: ubicacion.apertura,
+            cierre: ubicacion.cierre
+        }
+
+        console.log(ubicaciones);
+
+        Ubicacion.crear(ubicaciones).then(function(data) {
+            $scope.ubicaciones.push(data);
+            console.log(data);
+
+            Ubicacion.unir(data.id, $scope.proyectoCreado.id).then(function(data) {
+                console.log(data);
+            })
+            $scope.formularioUbicacion = false;
+
         })
 
     }
 
     $scope.CampanaDialog = function(ev) {
-        mdDialog.mostrardialog('adminCtrl', 'nuevacampana', $scope.customFullscreen, ev);
+        mdDialog.mostrardialog('nuevacampana', 'adminCtrl', $scope.customFullscreen, ev);
     };
+    $scope.obtenerCampanas = function() {
+
+        Campana.obtenerCampana().then(function(data) {
+            $scope.campanas = data.data;
+            $scope.$digest();
+            console.log(data);
+        })
+    }
+
+    $scope.obtenerDatos = function() {
+
+        Campana.obtenerCampana().then(function(data) {
+            $scope.campanas = data.data;
+            console.log(data);
+        })
+
+        Area.obtener().then(function(data) {
+            $scope.areas = data.data;
+            console.log(data);
+        })
+    }
 
     $scope.campanas = []
     $scope.areas = []
 
-    $scope.obtenerCampanas = function() {
+    $scope.nuevaCampana = function(campana) { //<-AQUI SE VA A AGREGAR LA NUEVA CAMPAÑA
 
-        $http.get('/data/campanas').success(function(data) {
-            $scope.campanas = data;
-            console.log($scope.campanas);
-        }).error(function(err) {
-            console.log(err)
+        let imagen = 'data:image/png;base64, ' + campana.foto.base64;
+
+        var campanas = {
+            nombre: campana.nombre,
+            descripcion: campana.descripcion,
+            logo: imagen,
+            fecha: campana.fecha
+        }
+
+        console.log(campanas);
+        Campana.crear(campanas).then(function(data) {
+            console.log(data);
+            alertas.mostrarToastEstandar("Nuevo Programa Creado");
+            $scope.campanas.push(data.data.nombre);
+            $scope.$digest();
+
         })
 
     }
 
-    $scope.campana = []
-    $scope.campanas = []
-    $scope.nuevaCampana = function() {
+    $scope.eliminarCampana = function(id, $index) {
 
-        console.log($scope.campana)
+        var idCampana = $stateParams.idCampana;
 
-        $http.post('/data/campanas', {
-            nombre: $scope.campana.nombre,
-            descripcion: $scope.campana.descripcion,
-            id_areas: $scope.campana.id_areas
-        }).success(function(data) {
-            alertas.mostrarToastEstandar("Nueva Campaña Creada");
-            $scope.campanas.push({
-                nombre: $scope.campana.nombre
+        ventana = $mdDialog.confirm().title('¿Seguro que quieres eliminar el programa?').textContent('Para eliminar de forma permanente dale click en Aceptar').ok('Aceptar').cancel('Cerrar').clickOutsideToClose(true);
+
+        $mdDialog.show(ventana).then(function() {
+
+            Campana.eliminar(idCampana).then(function(data) {
+                $scope.campanas.splice($index, 1)
+                $scope.$digest();
+                $state.go('campanas');
             })
-            console.log($scope.campanas)
-        }).error(function(err) {
-            console.log(err)
-        })
 
+        }, function() {});
+    }
+
+    $scope.eliminarArea = function(id) {
+
+        var idArea = $stateParams.idArea;
+
+        ventana = $mdDialog.confirm().title('¿Seguro que quieres eliminar el Area?').textContent('Para eliminar de forma permanente dale click en Aceptar').ok('Aceptar').cancel('Cerrar').clickOutsideToClose(true);
+
+        $mdDialog.show(ventana).then(function() {
+
+            Area.eliminar(idArea).then(function(data) {
+                $state.go('areas');
+            })
+
+        }, function() {});
     }
 
     $scope.AreaDialog = function(ev) {
-        mdDialog.mostrardialog('adminCtrl', 'nuevaarea', $scope.customFullscreen, ev);
+        mdDialog.mostrardialog('nuevaarea', 'adminCtrl', $scope.customFullscreen, ev);
     };
 
     $scope.Obtenerareas = function() {
@@ -253,9 +343,7 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
     $scope.nuevaArea = function() {
         console.log($scope.area)
 
-        $http.post('/data/areas', {
-            nombre: $scope.area.nombre
-        }).success(function(data) {
+        $http.post('/data/areas', {nombre: $scope.area.nombre}).success(function(data) {
             alertas.mostrarToastEstandar("Nueva Area Creada");
             $scope.area.push($scope.nombre)
             console.log($scope.area)
@@ -268,6 +356,8 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
     $scope.imagenes = [];
 
     $scope.agregarGrid = function(foto, proyectoCreado) {
+
+        console.log(proyectoCreado)
 
         switch (proyectoCreado.status_actual) {
             case 1:
@@ -287,35 +377,33 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
 
         var imagen = 'data:image/png;base64,' + foto.base64;
 
-        console.log(imagen);
+        Imagen.crear(ruta, IdStatus, imagen).then(function(data) {
 
-        $http.post('data/' + ruta + '/' + IdStatus, {
-            'imagen': imagen
-        }).success(function(data) {
             $scope.imagenes.push(data.imagen);
             $scope.idImagen = data;
-            console.log(data.id)
-            console.log('Agregada');
-        }).error(function(err) {
-            console.log(err)
+
         })
+
     }
 
     $scope.quitarGrid = function(index, idImagen) {
 
-        var id = idImagen.id;
-        console.log(id);
+        ventana = $mdDialog.confirm().title('¿Seguro que quieres eliminar la imagen?').textContent('Para eliminar una imagen dale en aceptar').ok('Aceptar').cancel('Cerrar').clickOutsideToClose(true);
 
-        $http.delete('/data/imagenes/' + id).success(function(data) {
-            $scope.imagenes.splice(index);
-            console.log('Eliminada')
-        }).error(function(err) {
-            console.log(err)
-        })
+        $mdDialog.show(ventana).then(function() {
+
+            var id = idImagen.id;
+            console.log(id);
+
+            Imagen.eliminar(id).then(function(data) {
+                console.log(data);
+            })
+
+        }, function() {});
 
     }
 
-    $scope.asignarDropify = function() {
+    $scope.Dropify = function() {
 
         $('.dropify').dropify({
             messages: {
@@ -345,43 +433,33 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, mdDialog, $timeo
 
     };
 
-    $scope.outputImage = null;
-    $scope.inputImage = null;
-    $scope.onUpdate = function(data) {
-        // runs whenever there's a change
-    }
-
+    $scope.campana,
     $scope.area = []
+
     $scope.editarArea = function(areas) {
         var id = areas.id;
         $http.put('/data/areas/' + id, areas).success(function(data) {
-            $scope.area.push({
-                nombre: areas.nombre
-            })
+            $scope.area.push({nombre: areas.nombre})
             console.log($scope.area);
             $state.go('areas');
 
-            // $state.go('nuevoproyecto.eventoseimagenes');
         }).error(function(err) {
             console.log(err)
         })
     }
 
-    $scope.campana = []
-    $scope.editarCampana = function(campanas) {
-        var id = campanas.id;
-        $http.put('/data/campanas/' + id, campanas).success(function(data) {
-            $scope.campana.push({
-                nombre: campanas.nombre,
-                descripcion: campanas.descripcion,
-                fecha: campanas.fecha,
-                id_areas: campanas.id_areas,
-            })
-            console.log($scope.campana);
-            $state.go('campanas');
-        }).error(function(err) {
-            console.log(err)
+    $scope.editarCampana = function(data) {
+
+        console.log(data);
+        Campana.editar(data).then(function(data) {
+            alertas.mostrarToastEstandar("Programa Editado Correctamente");
+            console.log(data);
+            $scope.campanas.push(data.nombre);
+            $scope.$digest();
         })
+
+        $state.go('campanas');
+
     }
 
 });

@@ -26,16 +26,25 @@ var progreso = require('./http/routes/routeProgreso');
 var proyectos = require('./http/routes/routeProyectos');
 var status = require('./http/routes/routeStatus');
 var terminado = require('./http/routes/routeTerminado');
-var usuarios = require('./http/routes/routeUsuarios');
+var usuario = require('./http/routes/routeUsuario');
+var materiales = require('./http/routes/routeMateriales');
+var ubicacion = require('./http/routes/routeUbicacion');
+var aportaciones = require('./http/routes/routeAportaciones');
+var multimedia = require('./http/routes/routeMultimedia');
+
+
 
 // - Conexion a la base de datos
 
 var con = require('./http/connection');
-require('./conf/auth')(app);
+//require('./conf/auth')(app);
 
 // - Middlewares
 
 var lessMiddleware = require('less-middleware')
+var expressStylus = require("express-stylus-middleware");
+
+app.use("/css", expressStylus(__dirname + "/stylus-css", { compress: true }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "jade");
@@ -67,7 +76,13 @@ app.use('/', progreso);
 app.use('/', proyectos);
 app.use('/', status);
 app.use('/', terminado);
-app.use('/', usuarios);
+app.use('/', usuario);
+app.use('/', materiales);
+app.use('/', ubicacion);
+app.use('/', aportaciones);
+app.use('/', multimedia);
+app.use('/', require('./http/routes/routePortada'));
+
 
 app.use(lessMiddleware(__dirname + '/assets'));
 app.use(lessMiddleware(__dirname + '/assets/frags'));

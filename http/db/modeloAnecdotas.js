@@ -5,7 +5,7 @@ var ex = function(conector) {
 
     var Anecdotas = sequelize.define('Anecdotas', {
         id:{ type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
-        descripcion: Sequelize.STRING,
+        contenido: Sequelize.TEXT,
     })
 
     return Anecdotas;

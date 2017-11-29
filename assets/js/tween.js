@@ -1,30 +1,17 @@
-// app.directive('texto', function() {
-//
-//     var scrollMagicController = new ScrollMagic.Controller();
-//
-//     $('.texto').each(function(){
-//
-//         console.log(this);
-//
-//         var elemento = this.children[0];
-//
-//         tl = new TimelineLite();
-//
-//         tl
-//             .from(elemento, .05 , {autoAlpha: 0, ease:Power4.easeIn})
-//             .set({}, {}, .2)
-//             .to(elemento, .1 , {autoAlpha: 0, ease:Power4.easeOut});
-//
-//         var scene = new ScrollMagic.Scene({
-//             triggerElement: elemento,
-//             triggerHook: .5,
-//             duration: '300px'/* How many pixels to scroll / animate */
-//         })
-//         .setTween(tl)
-//         .setPin(elemento)
-//         .addTo(scrollMagicController)
-//         .addIndicators();
-//
-//     })
-//
-// });
+
+app.directive('background', function() {
+
+	var body = $('html')
+
+    var tl = new TimelineMax({
+      repeat:-1,
+      yoyo: true
+    });
+
+    var reverseRepeat = function(tl) {
+      tl.reverse(0); // 0 sets the playhead at the end of the animation
+    }
+
+    tl.fromTo(body, 18, {backgroundPosition:'0% 82%', easy:Power1.easyIn}, {backgroundPosition:'100% 19%',  easy:Power1.easyIn})
+
+});

@@ -1,6 +1,6 @@
 var db = require('../relations');
 var campanas = db.campanas;
-var proyectos = db.proyectos;
+
 
 var ex = module.exports = {};
 
@@ -49,16 +49,16 @@ ex.read = function (req, res, next) {
                     res.status(200).jsonp(campana);
                 });
     } else {
-        campanas.findAll({
+        /*campanas.findAll({
             where: req.query,
             include: [{all:true}]
         })
         .then(res.send.bind(res))
-        .catch(next);
-        /*campanas.findAll()
+        .catch(next);*/
+        campanas.findAll()
                 .then(function (campanas) {
                     res.status(200).jsonp(campanas);
-                });*/
+                });
     }
 };
 

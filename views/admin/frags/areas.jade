@@ -16,13 +16,13 @@
                     span {{item.nombre}}
             md-button(md-colors="{background: 'green'}" ng-click="AreaDialog()")
                 md-icon add
-
-    md-toolbar
-        .md-toolbar-tools
-            h4 Lista de Areas
-    md-card-content(layout="column")
-        md-list
-            md-list-item(ng-repeat="area in areas | filter: ctrl.searchTextArea" ui-sref="area({idArea:area.id})")
-                .md-list-item-tex
-                    h1 {{area.id}}
-                    h4 {{area.nombre}}
+    md-card
+        md-toolbar
+            .md-toolbar-tools
+                h4 Lista de Areas
+        md-card-content
+            md-list
+                md-list-item.md-2-line(ng-repeat="area in areas | filter: ctrl.searchTextArea" ui-sref="area({idArea:area.id})")
+                    .md-list-item-text
+                        h1 {{area.nombre}} 
+                                         

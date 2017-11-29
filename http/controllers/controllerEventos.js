@@ -1,5 +1,7 @@
 var db = require('../relations');
 var eventos = db.eventos;
+var proyectos = db.proyectos;
+var usuario = db.usuario;
 
 var ex = module.exports = {};
 
@@ -33,6 +35,46 @@ ex.update = function(req, res, next) {
     });
 };
 
+ex.eventosProyectosStatus = function(req, res, next){
+
+    var idstatus = req.params.IdStatus;
+    var idproyecto = req.params.IdProyecto;
+
+    console.log(idstatus);
+
+    if(idstatus == 1){
+        var busqueda = {
+            where:{
+                id_pendiente: idproyecto
+            }
+        }
+    }
+    else
+        if(idstatus == 2){
+            var busqueda = {
+                where:{
+                    id_progreso: idproyecto
+                }
+            }
+        }
+        else
+            if(idstatus == 3){
+                var busqueda = {
+                    where:{
+                        id_terminado: idproyecto
+                    }
+                }
+            }
+
+
+    console.log(busqueda);
+
+    eventos.findAll(busqueda).then(function (eventos) {
+        res.status(200).jsonp(eventos);
+    });
+
+}
+
 ex.read = function(req, res, next) {
 
     var id = req.params.id;
@@ -46,4 +88,19 @@ ex.read = function(req, res, next) {
             res.status(200).jsonp(eventos);
         });
     }
+};
+
+
+ex.unir = function(req, res, next) {
+
+    var idevento = req.params.IdEvento;
+    var idusuario = req.params.IdUsuario;
+
+    eventos.findById(idevento).then(evento => {
+
+        return evento.addUsuario(idusuario);
+
+    })
+    .then(res.send.bind(res))
+
 };

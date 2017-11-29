@@ -3,6 +3,7 @@ extends ../index
 block moreHead
 	script(type="text/javascript" src="js/admin/admin.states.js")
 	script(type="text/javascript" src="js/admin/admin.controller.js")
+	link(type="text/css" rel="stylesheet", href="stylus/admin.css")
 
 block content
 
@@ -27,5 +28,5 @@ block content
 						.md-list-item-text
 							h4 {{seccion.nombre}}
 							
-			div(flex="70" flex-md="80" flex-sm="90" flex-xs="100")
+			div(flex="100" flex-md="100" flex-sm="100" flex-xs="100")
 				main.page(ui-view="main")

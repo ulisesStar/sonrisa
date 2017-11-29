@@ -6,6 +6,7 @@ var ex = function(conector) {
     var Terminado = sequelize.define('Terminado', {
         id:{ type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
         resultados: Sequelize.STRING,
+        duracion: Sequelize.STRING
     })
 
     return Terminado;

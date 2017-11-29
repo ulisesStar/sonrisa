@@ -1,84 +1,94 @@
-var app = angular.module('myapp', ['ngMaterial', 'ui.router', 'ngAnimate', 'naif.base64']);
+var app = angular.module('myapp', [
+    'ngMaterial',
+    'ui.router',
+    'ngAnimate',
+    'naif.base64',
+    'oc.lazyLoad',
+    'ngStorage',
+    'uiGmapgoogle-maps',
+    'ngCroppie'
+]);
 
-app.service('mdDialog', function ($mdDialog) {
+app.service('mdDialog', function($mdDialog) {
 
-    this.mostrardialog = function (controller, template, tamanioPantalla, ev) {
+    this.mostrardialog = function(template, DialogController, tamanioPantalla, ev) {
         $mdDialog.show({
+            controller: DialogController,
             templateUrl: '/partials/' + template,
             parent: angular.element(document.body),
-            targetEvent: ev,
+            bindToController: true,
+            preserveScope: true,
             clickOutsideToClose: true,
-            fullscreen: tamanioPantalla,
-            controller: controller,
-        }).then(function (answer) {
+            fullscreen: tamanioPantalla
+        }).then(function(answer) {
             console.log(template);
         });
     };
+
+    function DialogController($scope, $mdDialog) {
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.personalizable = function(answer) {
+            $mdDialog.hide(answer);
+            //OCULTA Y HAZ ALGO
+        };
+    }
 });
 
 //TEMAS
 app.config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('amber')
-    .accentPalette('orange');
+    $mdThemingProvider.theme('default').primaryPalette('amber').accentPalette('orange').warnPalette('red').backgroundPalette('grey');
 });
 
-app.directive('slider', function ($timeout) {
-    return {
-        restrict: 'AE',
-        replace: true,
-        scope: {
-            images: '='
-        },
-        link: function (scope, elem, attrs) {
+app.run(function($rootScope, $transitions, $timeout) {
+    $transitions.onStart({}, trans => {
+        $rootScope.loading = true;
+        $timeout.cancel()
 
-            scope.currentIndex = 0;
+    });
 
-            scope.next = function () {
-                scope.currentIndex < scope.images.length - 1 ? scope.currentIndex++ : scope.currentIndex = 0;
-            };
+    $transitions.onSuccess({}, trans => {
+        $rootScope.loading = false;
+    });
+})
 
-            scope.prev = function () {
-                scope.currentIndex > 0 ? scope.currentIndex-- : scope.currentIndex = scope.images.length - 1;
-            };
+app.config([
+    'uiGmapGoogleMapApiProvider',
+    function(GoogleMapApiProviders) {
+        GoogleMapApiProviders.configure({key: 'AIzaSyBMemut_EJ8vHuSf5SdmZ-R4wDBrUQWy6k', v: '3.17', libraries: 'weather,geometry,visualization'});
+    }
+]);
 
-            scope.$watch('currentIndex', function () {
-                scope.images.forEach(function (image) {
-                    image.visible = false;
-                });
-                scope.images[scope.currentIndex].visible = true;
-            });
+app.run([
+    '$rootScope',
+    '$window',
+    function($rootScope, $window) {
 
-            /* Start: For Automatic slideshow*/
+        $rootScope.user = {};
 
-            var timer;
+        FB.init({appId: '135506347062903', status: true, cookie: true, xfbml: true, version: 'v2.8'});
 
-            var sliderFunc = function () {
-                timer = $timeout(function () {
-                    scope.next();
-                    timer = $timeout(sliderFunc, 1500);
-                }, 1500);
-            };
+        $window.fbAsyncInit = function() {
 
-            sliderFunc();
+            FB.init({appId: '135506347062903', status: true, cookie: true, xfbml: true, version: 'v2.8'});
 
-            scope.$on('$destroy', function () {
-                $timeout.cancel(timer);
-            });
-
-            /* End : For Automatic slideshow*/
-        },
-        templateUrl: '/partials/slider'
-    };
-});
+        };
+    }
+]);
 
 app.service('alertas', [
     '$mdToast',
     function($mdToast) {
         this.mostrarToastEstandar = function(mensaje) {
             var last = {
-                bottom: true,
-                top: false,
+                bottom: false,
+                top: true,
                 left: false,
                 right: true
             };
@@ -110,7 +120,7 @@ app.service('alertas', [
 
             var pinTo = getToastPosition();
 
-            $mdToast.show($mdToast.simple().textContent(mensaje).position(pinTo).theme('success-toast').hideDelay(3000));
+            $mdToast.show($mdToast.simple().textContent(mensaje).position(pinTo).hideDelay(3000));
         }
     }
 ]);
