@@ -2,12 +2,13 @@ html(ng-app="myapp")
 	head
 		title Cada niño una sonrisa
 		
+		
 		script.
 			(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-			})(window,document,'script','dataLayer','GTM-W7VVWVP');
+			})(window,document,'script','dataLayer','GTM-NS4L69Q');
 
 		//- Angular
 		script(type="text/javascript", src="bower_components/angular/angular.min.js")
@@ -17,6 +18,8 @@ html(ng-app="myapp")
 		script(type="text/javascript", src="bower_components/svg-assets-cache.js/svg-assets-cache.js")
 		script(type="text/javascript", src="bower_components/angular-material/angular-material.min.js")
 		script(type="text/javascript", src="bower_components/angular-ui-router/release/angular-ui-router.min.js")
+		
+		script(type="text/javascript", src="bower_components/angular-material-data-table/dist/md-data-table.min.js")
 				
 		script(type="text/javascript", src="bower_components/ngstorage/ngStorage.min.js")
 		
@@ -35,7 +38,13 @@ html(ng-app="myapp")
 		script(type="text/javascript", src="//connect.facebook.net/en_US/sdk.js")
 
 		// google-maps
-		script(type="text/javascript", src='//maps.googleapis.com/maps/api/js?sensor=false')
+		script(type="text/javascript", src='//maps.googleapis.com/maps/api/js?key=AIzaSyBMemut_EJ8vHuSf5SdmZ-R4wDBrUQWy6k&libraries=places')
+		
+		//- Google Analytics
+		script(type="text/javascript", src="bower_components/angulartics/dist/angulartics.min.js")
+		script(type="text/javascript", src="bower_components/angulartics/dist/angulartics-gtm.min.js")
+					
+		
 		script(type="text/javascript", src="bower_components/angular-google-maps/dist/angular-google-maps.min.js")
 		script(type="text/javascript", src="bower_components/angular-simple-logger/dist/angular-simple-logger.min.js")
 		
@@ -79,9 +88,13 @@ html(ng-app="myapp")
 		link(type="text/css" rel="stylesheet", href="bower_components/dropify/dist/css/dropify.min.css")
 		link(type="text/css" rel="stylesheet", href="bower_components/croppie/croppie.css")
 		link(type="text/css" rel="stylesheet", href="bower_components/ngCroppie/ng-croppie.css")
+		
+		link(type="text/css" rel="stylesheet", href="bower_components/angular-material-data-table/dist/md-data-table.min.css")
 		//- Css locales
 
 		link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+		
+		link(type="text/css" rel="stylesheet", href="stylus/style.css")
 		
 		block moreHead
 			

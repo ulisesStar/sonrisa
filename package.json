@@ -30,6 +30,7 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
+    "q": "^1.5.1",
     "sequelize": "4.0.0-2",
     "serve-favicon": "^2.4.3",
     "stylus": "^0.54.5"

@@ -6,7 +6,10 @@ var app = angular.module('myapp', [
     'oc.lazyLoad',
     'ngStorage',
     'uiGmapgoogle-maps',
-    'ngCroppie'
+    'ngCroppie',
+    'md.data.table',
+    'angulartics',
+    'angulartics.google.tagmanager'
 ]);
 
 app.service('mdDialog', function($mdDialog) {
@@ -87,8 +90,8 @@ app.service('alertas', [
     function($mdToast) {
         this.mostrarToastEstandar = function(mensaje) {
             var last = {
-                bottom: false,
-                top: true,
+                bottom: true,
+                top: false,
                 left: false,
                 right: true
             };

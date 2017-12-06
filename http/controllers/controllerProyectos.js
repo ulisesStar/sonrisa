@@ -21,9 +21,55 @@ var ex = module.exports = {};
 ex.create = function(req, res, next) {
 
     var data = req.body;
-    proyectos.create(data).then(function() {
-        res.status(200).jsonp({msj: 'SUCCESS!'});
+
+    console.log(data)
+
+    proyectos.create(data).then(function(result) {
+
+        pendiente.create(data.pendiente).then(res => {
+            res.addProyecto(result.id);
+        })
+        progreso.create(data.progreso).then(res => {
+            res.addProyecto(result.id);
+        })
+        terminado.create(data.terminado).then(res => {
+            res.addProyecto(result.id);
+        })
+
     });
+
+    //
+    // function first(){
+    //
+    //     var result = {}
+    //
+        // pendiente.create(data.pendiente).then(res => { result.id_pendiente = res.id })
+        // progreso.create(data.progreso).then(res => { result.id_progreso = res.id })
+        // terminado.create(data.terminado).then(res => { result.id_terminado = res.id })
+    //
+    //     result.id_pendiente = 1
+    //
+    //     return result
+    //
+    // }
+    //
+    // first()
+    // .then(x => {
+    //
+    //     console.log(x)
+    //
+    //     status.create(x).then(res => {
+    //
+    //
+    //     })
+    //
+    //     // proyectos.create(data).then(result => {
+    //     //     res.status(200).jsonp(result);
+    //     //
+    //     // })
+    //
+    // })
+
 };
 
 ex.proyectosLite = function(req, res, next) {
@@ -33,7 +79,6 @@ ex.proyectosLite = function(req, res, next) {
     }).then(function(proyectos) {
         res.status(200).jsonp(proyectos);
     });
-
 };
 
 ex.pendiente = function(req, res, next) {
@@ -43,46 +88,9 @@ ex.pendiente = function(req, res, next) {
 		attributes: ['id','nombre', 'descripcion'],
         include: [
             {
-                model: status,
-                attributes: ['id'],
-                include: [
-                    {
-                        model: pendiente,
-                        attributes: ['tareas', 'objetivos'],
-                        include: [
-                            {
-                                model: eventos,
-                                attributes: ['nombre', 'descripcion', 'fecha'],
-                                include: [
-                                    {
-                                        model: usuario,
-                                        as: 'Usuario',
-                                        attributes: ['id','fb_avatar'],
-                                    }
-                                ]
-                            }, {
-                                model: imagenes,
-                                attributes: ['imagen'],
-                                where: {
-                                    portada: 1
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                model: materiales,
-                attributes: ['id','cantidad', 'nombre'],
-                include: [
-                    {
-                        model: usuario,
-                        as: 'Usuario',
-                        attributes: ['id','fb_avatar'],
-                    }
-                ]
-            }, {
-                model: ubicacion,
-                as: 'Ubicacion'
+                model: pendiente,
+                as : 'Pendiente',
+                attributes: ['tareas', 'objetivos']
             }
         ]
     }).then(function(result) {
@@ -107,47 +115,14 @@ ex.pendiente = function(req, res, next) {
 }
 
 ex.progreso = function(req, res, next) {
+
     var id = req.params.id;
 
     proyectos.findById(id, {
         include: [
             {
-                model: status,
-                include: [
-                    {
-                        model: progreso,
-                        include: [
-                            {
-                                model: eventos,
-                                include: [
-                                    {
-                                        model: usuario,
-                                        as: 'Usuario'
-                                    }
-                                ]
-                            }, {
-                                model: imagenes,
-                                where: {
-                                    portada: 1
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                model: materiales,
-                include: [
-                    {
-                        model: usuario,
-                        as: 'Usuario'
-                    }
-                ]
-            }, {
-                model: ubicacion,
-                as: 'Ubicacion'
-            }, {
-                model: usuario,
-                as: 'Usuario'
+                model: progreso,
+                as: 'Progreso'
             }
         ]
     }).then(function(result) {
@@ -165,11 +140,11 @@ ex.terminado = function(req, res, next) {
                 include: [
                     {
                         model: terminado,
-                        include: [
-                            {
-                                model: imagenes
-                            }
-                        ]
+                        // include: [
+                        //     {
+                        //         model: imagenes
+                        //     }
+                        // ]
                     }
                 ]
             }
@@ -248,42 +223,45 @@ ex.delete = function(req, res, next) {
 };
 
 ex.update = function(req, res, next) {
+
     var id = req.params.id;
-    var infobasica = req.body;
+    var data = req.body;
 
-    var infopendiente = req.body.Status.Pendiente;
-    var infoprogreso = req.body.Status.Progreso;
-    var infoterminado = req.body.Status.Terminado;
+    // var infopendiente = req.body.Status.Pendiente;
+    // var infoprogreso = req.body.Status.Progreso;
+    // var infoterminado = req.body.Status.Terminado;
 
-    proyectos.update(infobasica, {
+    proyectos.update(data, {
         where: {
             id: id
         }
-    })
-    pendiente.update(infopendiente, {
-        where: {
-            id: id
-        }
-    })
-    progreso.update(infoprogreso, {
-        where: {
-            id: id
-        }
-    })
-    terminado.update(infoterminado, {
-        where: {
-            id: id
-        }
-    }).then(function(result) {
+    }).then(result => {
         res.status(200).jsonp(result);
-    });
+    })
+    // pendiente.update(infopendiente, {
+    //     where: {
+    //         id: id
+    //     }
+    // })
+    // progreso.update(infoprogreso, {
+    //     where: {
+    //         id: id
+    //     }
+    // })
+    // terminado.update(infoterminado, {
+    //     where: {
+    //         id: id
+    //     }
+    // }).then(function(result) {
+    //     res.status(200).jsonp(result);
+    // });
 };
 
 ex.filtro = function(req, res, next) {
 
     var data = req.body;
 
-    console.log(data)
+    // console.log(data)
 
     switch (data.where.status_actual) {
         case 1:
@@ -324,21 +302,16 @@ ex.filtro = function(req, res, next) {
     //     }
     // ), data);
 
-    console.log('-');
-    console.log(data);
-    console.log('-');
-
     var indexAreas = _.findIndex(data.include, ['model', 'areas']);
 
     if (indexAreas != -1) {
         _.updateWith(data, 'include[' + indexAreas + ']', _.constant({model: areas, as: 'Areas', where: data.include[indexAreas].where}), data);
     }
 
-    data.attributes = ['id','nombre', 'StatusId'];
+    data.attributes = ['id','nombre'];
 
     proyectos.findAll(data).then(result => {
 
-        console.log(result)
 
         res.status(200).jsonp(result);
 
@@ -407,17 +380,16 @@ ex.read = function(req, res, next) {
 };
 
 ex.proyectosConUbicaciones = function(req, res, next) {
+
+
     var id = req.params.id;
 
-    proyectos.findById(id, {
-        include: [
-            {
-                model: ubicacion,
-                as: 'Ubicacion'
-            }
-        ]
-    }).then(function(proyecto) {
-        res.status(200).jsonp(proyecto)
+    proyectos.findById(id).then(function(proyecto) {
+
+        proyecto.getUbicacion().then(ubicaciones => {
+            res.status(200).jsonp(ubicaciones)
+        })
+
     });
 
 };

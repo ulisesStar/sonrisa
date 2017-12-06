@@ -8,10 +8,15 @@ var ex = function(conector) {
         nombre: Sequelize.STRING,
         latitude: Sequelize.FLOAT,
         longitude:Sequelize.FLOAT,
-        direccion: Sequelize.TEXT,
-        periodo: Sequelize.DATE,
-        apertura: Sequelize.DATE,
-        cierre: Sequelize.DATE
+        numero: Sequelize.STRING,
+        calle: Sequelize.STRING,
+        colonia: Sequelize.STRING,
+        estado: Sequelize.STRING,
+        codigopostal: Sequelize.STRING,
+        inicio: Sequelize.DATE,
+        fin: Sequelize.DATE,
+        apertura: Sequelize.STRING,
+        cierre: Sequelize.STRING
     })
 
     return Ubicacion;

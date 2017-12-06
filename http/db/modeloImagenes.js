@@ -13,7 +13,7 @@ var ex = function(conector) {
                 return Imagenes
             },
         },
-        portada: Sequelize.INTEGER
+        status: Sequelize.INTEGER
     })
 
     return Imagenes;

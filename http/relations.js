@@ -25,10 +25,14 @@ var avatar = require('./db/modeloAvatar')(conector);
 
 //RElACIONES
 
-proyectos.belongsTo(status);
-
 institucion.hasMany(usuario , {foreignKey: 'id_institucion'});
+
 usuario.hasMany(anecdotas , {foreignKey: 'id_usuario'});
+
+
+anecdotas.belongsTo(usuario , {foreignKey: 'id_usuario'});
+anecdotas.belongsTo(proyectos , {foreignKey: 'id_proyecto'});
+
 campanas.hasMany(proyectos , {foreignKey: 'id_campanas'});
 
 proyectos.belongsToMany(ubicacion, {as:'Ubicacion', through: 'proyectos_ubicacion', foreignKey: 'id_proyecto'});
@@ -54,28 +58,22 @@ anecdotas.hasMany(multimedia, {foreignKey: 'id_anecdota'})
 materiales.belongsTo(proyectos , {foreignKey: 'id_proyecto'});
 proyectos.hasMany(materiales , {foreignKey: 'id_proyecto'});
 
-status.belongsTo(pendiente , {foreignKey: 'id_pendiente'});
-status.belongsTo(progreso , {foreignKey: 'id_progreso'});
-status.belongsTo(terminado , {foreignKey: 'id_terminado'});
+proyectos.belongsToMany(pendiente , {as:'Pendiente', through: status, foreignKey: 'id_proyecto'});
+proyectos.belongsToMany(progreso , {as:'Progreso', through: status, foreignKey: 'id_proyecto'});
+proyectos.belongsToMany(terminado , {as:'Terminado', through: status, foreignKey: 'id_proyecto'});
 
-eventos.belongsTo(pendiente , {foreignKey: 'id_pendiente'});
-eventos.belongsTo(progreso , {foreignKey: 'id_progreso'});
-eventos.belongsTo(terminado , {foreignKey: 'id_terminado'});
+pendiente.belongsToMany(proyectos , {as:'Proyecto', through: status, foreignKey: 'id_pendiente'});
+progreso.belongsToMany(proyectos , {as:'Proyecto', through: status, foreignKey: 'id_progreso'});
+terminado.belongsToMany(proyectos , {as:'Proyecto', through: status, foreignKey: 'id_terminado'});
 
-pendiente.hasMany(eventos , {foreignKey: 'id_pendiente'});
-progreso.hasMany(eventos , {foreignKey: 'id_progreso'});
-terminado.hasMany(eventos , {foreignKey: 'id_terminado'});
+eventos.belongsTo(proyectos , {foreignKey: 'id_proyecto'});
+proyectos.hasMany(eventos , {foreignKey: 'id_proyecto'});
 
-imagenes.belongsTo(pendiente , {foreignKey: 'id_pendiente'});
-imagenes.belongsTo(progreso , {foreignKey: 'id_progreso'});
-imagenes.belongsTo(terminado , {foreignKey: 'id_terminado'});
-
-pendiente.hasMany(imagenes , {foreignKey: 'id_pendiente'});
-progreso.hasMany(imagenes , {foreignKey: 'id_progreso'});
-terminado.hasMany(imagenes , {foreignKey: 'id_terminado'});
+imagenes.belongsTo(proyectos , {foreignKey: 'id_proyecto'});
+proyectos.hasMany(imagenes , {foreignKey: 'id_proyecto'});
 
 avatar.belongsTo(usuario , {foreignKey: 'id_usuario'});
-usuario.hasMany(avatar , {foreignKey: 'id_usuario'});
+usuario.hasOne(avatar , {foreignKey: 'id_usuario'});
 
 module.exports.anecdotas = anecdotas;
 module.exports.areas = areas;

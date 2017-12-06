@@ -1,33 +1,19 @@
 var app = angular.module('myapp');
 
-app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $stateParams, $rootScope, $http, $mdDialog, $localStorage, ProyectosPendientes, Evento, Imagen, Aportaciones, Material, Usuario, Anecdota) {
+app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $stateParams, $rootScope, $http, $mdDialog, $localStorage, ProyectosPendientes, Evento, Imagen, Aportaciones, Material, Usuario, Anecdota, Portada, Ubicacion, AuthService) {
 
-    var self = this;
-
-    self.activated = true;
-    self.determinateValue = 30;
-    $scope.loaderProyectoPendiente = true;
-
-    $interval(function() {
-
-        self.determinateValue += 1;
-        if (self.determinateValue > 100) {
-            self.determinateValue = 30;
-        }
-    }, 100);
-
+	$scope.loaderProyectoPendiente = true;
     if ($stateParams.proyecto === null) {
         $state.go('proyectos.vista1')
     } else {
-        var idproyecto = $stateParams.proyecto;
 
+        var id = $stateParams.proyecto;
         var status = 1;
+
         if ($scope.usuario === undefined) {
-            var token = $localStorage.token;
-            Usuario.token(token).then(data => {
+            AuthService.token($localStorage.token).then(data => {
                 $scope.usuario = data.user;
             })
-            console.log('obtuve el usuario');
         }
 
         $scope.map = {
@@ -40,130 +26,151 @@ app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $s
 
         $scope.markers = [];
 
-        ProyectosPendientes.obtener(idproyecto).then(function(data) {
-            $scope.proyecto = data.data;
+        ProyectosPendientes.obtener(id).then(res =>  {
+
+
+            $scope.proyecto = res.data;
             $scope.loaderProyectoPendiente = false;
-            console.log(data);
+            $scope.$digest()
 
-            _.map(data.Ubicacion, ubcacionesft)
-            function ubcacionesft(n) {
-                $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
-            }
 
-			data.materiales.forEach(material => {
-                material.recaudado = 0;
-				let index
-                material.Usuario.forEach(user => {
-                    index++
-                    material.recaudado = material.recaudado + user.Aportaciones.contribucion;
+			// data.materiales.forEach(material => {
+            //     material.recaudado = 0;
+			// 	let index
+            //     material.Usuario.forEach(user => {
+            //         index++
+            //         material.recaudado = material.recaudado + user.Aportaciones.contribucion;
+            //     })
+            // })
+
+            return res.data.id
+
+        }).then(id => {
+
+            Portada.obtener(id).then(res => {
+                $scope.portada = res.data;
+            })
+
+            Imagen.obtener(id).then(res => {
+                $scope.imagenes = res.data;
+                $scope.$digest();
+            })
+
+            Ubicacion.obtenerConProyecto(id).then(res => {
+                $scope.ubicaciones = res.data;
+                return res.data
+            }).then(result => {
+                _.map(result, function(n) {
+                    $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
                 })
             })
 
-			$scope.Eventos = data.Status.Pendiente.Eventos;
+
+            obtenerMateriales()
+            obtenerEventos()
 
         })
-
-        Imagen.obtenerStatus(idproyecto, status).then(function(data) {
-            $scope.imagenes = data;
-            console.log(data);
-        })
-
     }
 
     function obtenerMateriales() {
         let proyecto = $stateParams.proyecto;
-        Material.obtenerConProyecto(proyecto).then(data => {
-            $scope.proyecto.materiales = data;
+        Material.obtenerConProyecto(proyecto).then(res => {
+            $scope.materiales = res.data;
+			$scope.$digest()
         })
     }
 
     function obtenerEventos() {
-        Evento.obtenerStatus(idproyecto, status).then(function(data) {
-            console.log(data);
-            $scope.Eventos = data;
-        })
+		console.log('voy')
+		Evento.proyecto(id).then(res => {
+	        $scope.eventos = res.data;
+			$scope.$digest()
+	    })
     }
 
     $scope.donarMateriales = function(material, ev) {
-		console.log('si estoy siendo usado')
-        $mdDialog.show({
-            templateUrl: '/partials/materiales',
-            parent: angular.element(document.body),
-            locals: {
-                material: material,
-                usuario: $scope.usuario
-            },
-            bindToController: true,
-            preserveScope: true,
-            fullscreen: $scope.customFullscreen,
-            controller: DialogController
-        }).then(data => {
-            obtenerMateriales();
-            $scope.$apply();
-        });
-        function DialogController($scope, $mdDialog, material, usuario) {
 
-            $scope.material = material;
-            $scope.usuario = usuario;
-            // console.log($scope.usuario);
-            // console.log($scope.material);
+		$scope.usuario !== undefined ? (
 
-            $scope.unir = function(cantidad) {
-                union = {
+			$mdDialog.show(
+				$mdDialog.prompt()
+				.title('¿Quiere aportar a esta causa?')
+				.textContent('Empieza por introducir su titulo')
+				.placeholder('Piezas para contribuir')
+				.ok('Muchas Gracias por tu donativo')
+				.cancel('Me arrepenti')
+			).then(result => {
+
+                Aportaciones.unir({
                     id_materiales: material.id,
-                    id_usuario: usuario.id,
-                    contribucion: cantidad
-                }
-
-                let proyecto = $stateParams.proyecto;
-                Aportaciones.unir(union).then(data => {
-                    let status = true;
-                    $mdDialog.hide(status);
+                    id_usuario: $scope.usuario.id,
+                    contribucion: result
+                }).then(data => {
+                    obtenerMateriales()
                 });
-            }
 
-            $scope.close = function() {
-                let status = false;
-                $mdDialog.hide(status);
-            }
-        }
+			}, function() {
+	            console.log('no confirmo')
+	        })
+
+		) : (
+
+			alert = $mdDialog.alert({
+				title: 'Inicia Sesión',
+				textContent: 'Debes iniciar Sesión para donar a este proyecto',
+				ok: 'Close'
+			}),
+
+			$mdDialog
+			.show( alert )
+			.finally(function() {
+			  alert = undefined;
+			})
+
+		)
+
+
     }
 
     $scope.inscribirseEvento = function(evento, ev) {
 
-        $mdDialog.show({
-            templateUrl: '/partials/evento',
-            parent: angular.element(document.body),
-            locals: {
-                evento: evento,
-                usuario: $scope.usuario
-            },
-            bindToController: true,
-            preserveScope: true,
-            fullscreen: $scope.customFullscreen,
-            controller: DialogController
-        }).then(data => {
-            obtenerEvento();
-            $scope.$apply();
-        });
-        function DialogController($scope, $mdDialog, evento, usuario) {
+		$scope.usuario !== undefined ? (
 
-            $scope.evento = evento;
-            $scope.usuario = usuario;
+	        ventana = $mdDialog.confirm()
+	        .title('Estas apunto de inscribirte al evento "' + evento.nombre + '"')
+	        .textContent(evento.descripcion)
+	        .ok('Aceptar')
+	        .cancel('Cerrar')
+	        .clickOutsideToClose(true),
 
-            $scope.unir = function() {
+	        $mdDialog.show(ventana).then(result => {
 
-                Evento.unir(evento.id, usuario.id).then(data => {
-                    let status = true;
-                    $mdDialog.hide(status);
-                });
-            }
+				delete $scope.eventos
 
-            $scope.close = function() {
-                let status = false;
-                $mdDialog.hide(status);
-            }
-        }
+				Evento.unir(evento.id, $scope.usuario.id)
+				.then(data => {
+					obtenerEventos()
+	            })
+
+	        }, function() {
+	            console.log('no confirmo')
+	        })
+
+		) : (
+
+			alert = $mdDialog.alert({
+		        title: 'Inicia Sesión',
+		        textContent: 'Debes iniciar Sesión para inscribite a este evento',
+		        ok: 'Close'
+			}),
+
+	      	$mdDialog
+	        .show( alert )
+	        .finally(function() {
+	          alert = undefined;
+	        })
+
+		)
     }
 
 });

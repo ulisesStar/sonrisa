@@ -7,13 +7,12 @@ var ex = function(conector) {
         nombre: Sequelize.STRING,
         correo: Sequelize.STRING,
         fb_id: Sequelize.STRING,
-		fb_token: Sequelize.INTEGER,
+		fb_token: Sequelize.STRING,
         password: Sequelize.STRING,
         tipo: Sequelize.STRING,
         apellidos: Sequelize.STRING,
         edad: Sequelize.INTEGER,
-        foto: Sequelize.STRING,
-        fb_avatar: Sequelize.INTEGER
+        foto: Sequelize.STRING
     })
 
     return Usuario;

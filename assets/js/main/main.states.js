@@ -18,14 +18,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		},
         resolve: {
 			login: function($window, AuthService, $localStorage, Usuario, Session){
-				if($window.location.pathname.length > 10){
-					var url = $window.location.pathname;
-					var token = url.split('/');
-					Usuario.token(token[1]).then(data => {
-						Session.create(token[1]);
-						$window.location.pathname = '';
-					})
-				}
+				
 			},
             loadMyCtrl: [
                 '$ocLazyLoad',
@@ -47,7 +40,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				if($window.location.pathname.length > 10){
 					var url = $window.location.pathname;
 					var token = url.split('/');
-					Usuario.token(token[1]).then(data => {
+					AuthService.token(token[1]).then(data => {
 						Session.create(token[1]);
 						$window.location.pathname = '';
 					})

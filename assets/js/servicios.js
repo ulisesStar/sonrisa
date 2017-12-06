@@ -1,5 +1,8 @@
 app.service('Proyectos', function($http, alertas) {
-    this.crear              = function(data) { return axios.post('/data/CrearProyecto', data) }
+    //this.crear              = function(data) { return axios.post('/data/CrearProyecto', data) }
+	this.crear              = function(proyecto) { return axios.post('/data/proyectos', proyecto) }
+
+    this.one                = function(id) { return axios('/data/proyectos/' + id) }
     this.obtener            = function() { return axios('/data/proyectos') }
     this.obtenerTodosLite   = function() { return axios('/data/proyectosLite')}
     this.obtenerOne         = function(id) { return axios('/data/ProyectoStatus/' + id)}
@@ -21,12 +24,23 @@ app.service('ProyectosTerminado', function($http, alertas, $q) {
 });
 
 app.service('Imagen', function($http, alertas, $q) {
-    this.crear = function(ruta, status, imagen) { return axios.post('data/' + ruta + '/' + status, imagen) }
+
+    this.crear = function(imagen) { return axios.post('data/imagenes', imagen) }
+    // - this.crear = function(ruta, status, imagen) { return axios.post('data/' + ruta + '/' + status, imagen) }
+    this.obtener = function(id) { return axios('/data/imagenXproyecto/' + id) }
+    this.one = function(id) { return axios('/data/imagenes/' + id) }
     this.eliminar = function(id) { return axios.delete('/data/imagenes/' + id) }
     this.obtenerStatus = function(proyecto, status) { return axios('data/imagenesProyectosStatus/' + proyecto + '/' + status) }
     this.portadaBorrar = function(id, imagen) { return axios.post('/data/portada/' + id, imagen) }
     this.portadaCrear = function(imagen) { return axios.post('/data/portada', imagen) }
 	this.obtenerPortada = function(id) { return axios('/data/portada/' + id) }
+
+});
+
+app.service('Portada', function($http, alertas, $q) {
+    this.portadaBorrar = function(id, imagen) { return axios.post('/data/portada/' + id, imagen) }
+    this.portadaCrear = function(imagen) { return axios.post('/data/portada', imagen) }
+    this.obtener = function(id) { return axios('/data/portada/' + id) }
 
 });
 
@@ -40,11 +54,15 @@ app.service('Campana', function($http, alertas, $q) {
 });
 
 app.service('Evento', function($http, alertas, $q) {
+
     this.obtener = function(campana, proyecto) { return axios('/data/eventos') }
+    this.crear = function(evento) { return axios.post('/data/eventos', evento) }
     this.obtenerStatus = function(proyecto, status) { return axios('data/eventosProyectosStatus/' + proyecto + '/' + status) }
     this.obtenerOne = function(id) { return axios('/data/eventos/' + id) }
     this.editar = function(evento) { return axios.put('/data/eventos/' + evento.id, evento) }
-    this.unir = function(evento, usuario) { return axios.post('/data/eventosusuario/' + evento + '/' + usuario) }
+    this.unir = function(evento, usuario) { return axios.post('/data/eventosusuario/' + evento + '/' + usuario).catch(error => {console.log(error)})}
+    this.proyecto = function(id) { return axios('/data/eventosXproyecto/' + id) }
+
 });
 
 app.service('Area', function($http, alertas, $q) {
@@ -56,7 +74,7 @@ app.service('Area', function($http, alertas, $q) {
 });
 
 app.service('Ubicacion', function($http, alertas, $q) {
-    this.crear = function(ubicacion) { return axios.post('/data/ubicacion', ubicacion) }
+    this.crear = function(ubicacion, id) { return axios.post('/data/ubicacion/' + id, ubicacion) }
     this.obtenerOne = function(id) { return axios('/data/ubicacion/' + id) }
     this.unir = function(ubicacion, proyecto) { return axios.post('/data/ubicacion/' + ubicacion + '/' + proyecto) }
     this.editar = function(ubicacion) { return axios.put('/data/ubicacion/' + ubicacion.id, ubicacion) }
@@ -80,6 +98,14 @@ app.service('Anecdota', function($http, alertas, $q) {
     this.obtener = function(id) { return axios('/data/anecdotaproyecto/' + id) }
     this.crear = function(id) { return axios.post('/data/anecdota/', anecdota) }
 });
+
+
+app.service('Usuario', function($http, alertas, $q) {
+    this.obtener = function(id){ return axios('/data/usuario/' + id) }
+    this.materiales = function(id){ return axios('/data/materialXusuario/' + id) }
+    this.eventos = function(id){ return axios('/data/eventosXusuario/' + id) }
+});
+
 
 app.service('Facebook', function($http, alertas, $q) {
     this.crear = function(contenido, usuario) { FB.api('/113124472034820', function(response) { console.log(response);}); }

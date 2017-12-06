@@ -21,6 +21,6 @@
             .md-toolbar-tools
                 h4 Lista de Proyectos Actuales
         md-list
-            md-list-item.md-2-line(ng-repeat="proyecto in proyectos | filter: ctrl.searchTextProyecto" ui-sref="proyecto({idProyecto:proyecto.id})")
+            md-list-item.md-2-line(ng-repeat="proyecto in proyectos | filter: ctrl.searchTextProyecto" ng-click="irProyecto(proyecto)")
                 .md-list-item-text
                     p {{proyecto.nombre}}

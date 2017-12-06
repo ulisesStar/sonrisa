@@ -1,6 +1,7 @@
-section(ng-if="proyectoCreado === undefined")
-    md-card(ng-init="obtenerDatos()")
-        md-card-content(layout="column")
+section
+    form(ng-submit="submit(proyecto)")
+        md-card
+            md-card-content(layout="column")
                 h1 Información básica
                 md-input-container(flex)
                     label Nombre del proyecto
@@ -8,8 +9,7 @@ section(ng-if="proyectoCreado === undefined")
                 md-input-container(flex)
                     label Descripcion
                     input(ng-model="proyecto.descripcion")
-                
-        md-card-content(layout="row")
+            md-card-content(layout="row")
                 md-input-container(flex)
                     label Areas
                     md-select(ng-model="proyecto.Id_area")
@@ -25,17 +25,7 @@ section(ng-if="proyectoCreado === undefined")
                         md-option(ng-value="2") Progreso
                         md-option(ng-value="3") Terminado
 
-//section(ng-if="proyectoCreado != undefined")
-    md-card
-        md-card-content
-            md-icon(md-colors="{color: 'green'}") done
-            h1 {{proyectoCreado.nombre}}
-            p {{proyectoCreado.Status.Pendiente.id}}
-            p {{proyectoCreado.Status.Progreso.id}}
-            //p {{proyectoCreado.Status.Terminado.id}}
-
-main.page(ui-view="main")
-    
-md-card(ng-if="proyectoCreado === undefined")
-    md-button(type="submit" ng-click="IngresarProyecto($scope.proyecto)"  md-colors="{background: 'green'}")
-        md-icon send
+        main.page(ui-view="main")
+        md-card
+            md-button(type="submit"  md-colors="{background: 'green'}")
+                md-icon send

@@ -1,11 +1,9 @@
 
-app.factory('AuthService', function($window, $q, $http, Session, $localStorage, alertas, $state, Usuario) {
+app.factory('AuthService', function($window, $q, $http, Session, $localStorage, alertas, $state, Usuario, $window) {
 
     var authService = {};
 
     authService.registro = function(credentials) {
-
-
         $http.post('/data/registro', credentials)
         .success(function(data){
             console.log(data);
@@ -48,7 +46,7 @@ app.factory('AuthService', function($window, $q, $http, Session, $localStorage, 
 
     authService.logout = function() {
         Session.destroy();
-        console.log('si estoy logout')
+        $window.location.href = '/';
     };
 
     authService.update = function(user) {
@@ -59,6 +57,56 @@ app.factory('AuthService', function($window, $q, $http, Session, $localStorage, 
             return resp;
         });
     };
+
+    authService.token = function(token) {
+        var deferred = $q.defer();
+        $http.get('/data/token/' + token).success(function(data) {
+            deferred.resolve(data);
+            // console.log(data);
+            if (data.success === false) {
+                alertas.mostrarToastEstandar("No se pudo logear");
+            } else {
+                alertas.mostrarToastEstandar("Paso el proceso de seguridad");
+            }
+        }).error(function(data) {
+            alertas.mostrarToastEstandar(":(")
+        })
+        return deferred.promise;
+    }
+
+    authService.fb = function(token) {
+        var deferred = $q.defer();
+        $http.get('/data/token/' + token)
+        .success(function(data) {
+            deferred.resolve(data);
+            // console.log(data);
+            if (data.success === false) {
+                alertas.mostrarToastEstandar("No se pudo logear");
+            } else {
+                Session.create(token);
+    			$window.location.pathname = '';
+            }
+        }).error(function(data) {
+            alertas.mostrarToastEstandar(":(")
+        })
+        return deferred.promise;
+    }
+
+    authService.obtener = function(id) {
+        var deferred = $q.defer();
+        $http.get('/data/usuario/' + id).success(function(data) {
+            deferred.resolve(data);
+            if (data === null) {
+                alertas.mostrarToastEstandar("No se pudo obtener el Usuario");
+            } else {
+                alertas.mostrarToastEstandar("Exito");
+            }
+        }).error(function(data) {
+            alertas.mostrarToastEstandar(":(")
+        })
+
+        return deferred.promise;
+    }
 
     return authService;
 });
@@ -91,40 +139,4 @@ app.service('Session', function($localStorage) {
     this.destroy = function() {
         $localStorage.$reset();
     };
-});
-
-app.service('Usuario', function($http, alertas, $q) {
-
-    this.token = function(token) {
-        var deferred = $q.defer();
-        $http.get('/data/token/' + token).success(function(data) {
-            deferred.resolve(data);
-            // console.log(data);
-            if (data.success === false) {
-                alertas.mostrarToastEstandar("No se pudo logear");
-            } else {
-                alertas.mostrarToastEstandar("Paso el proceso de seguridad");
-            }
-        }).error(function(data) {
-            alertas.mostrarToastEstandar(":(")
-        })
-        return deferred.promise;
-    }
-
-    this.obtener = function(id) {
-        var deferred = $q.defer();
-        $http.get('/data/usuario/' + id).success(function(data) {
-            deferred.resolve(data);
-            if (data === null) {
-                alertas.mostrarToastEstandar("No se pudo obtener el Usuario");
-            } else {
-                alertas.mostrarToastEstandar("Exito");
-            }
-        }).error(function(data) {
-            alertas.mostrarToastEstandar(":(")
-        })
-
-        return deferred.promise;
-    }
-
 });

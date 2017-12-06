@@ -1,12 +1,43 @@
 .perfil(layout="row" layout-align="center start")
 	.perfil-container(flex="80")
-		md-card
-			md-list
-				md-list-item.md-2-line
-					.md-list-item-text
-						h4 {{usuario.nombre}}
-						p Nombre
-				md-list-item.md-2-line
-					.md-list-item-text
-						h4 {{usuario.correo}}
-						p Correo
+		.info
+			md-card
+				md-card-content(layout="row")
+					div(flex)
+						img(src="{{usuario.avatar.fb_avatar}}")
+					md-list(flex)
+						md-list-item.md-2-line
+							.md-list-item-text
+								h4 {{usuario.nombre}}
+								p Nombre
+						md-list-item.md-2-line
+							.md-list-item-text
+								h4 {{usuario.correo}}
+								p Correo
+		.aportaciones
+			md-card			
+				md-card-content
+					h2 Aportaciones
+					div(layout="row")
+						div(flex)
+							.titulo
+								md-icon build
+								h4 Materiales
+							md-progress-linear(md-mode="indeterminate" ng-if="!eventos"  ng-disabled="eventos")
+							md-list
+								md-list-item(ng-repeat="material in materiales")
+									.md-list-item-text
+										h4 {{material.nombre}}
+									.md-secondary
+										md-button Ir a proyecto: {{material.Proyecto.nombre}}
+						div(flex)
+							.titulo
+								md-icon date_range
+								h4 Eventos
+							md-progress-linear(md-mode="indeterminate" ng-if="!materiales" ng-disabled="materiales")
+							md-list
+								md-list-item(ng-repeat="evento in eventos")
+									.md-list-item-text
+										h4 {{evento.nombre}}
+									.md-secondary
+										md-button() Ir a proyecto: {{evento.Proyecto.nombre}}

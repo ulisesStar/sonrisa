@@ -15,4 +15,8 @@ routeMateriales.route('/data/materiales/:id')
 routeMateriales.route('/data/materialConProyecto/:IdProyecto')
         .get(x.materialProyectos);
 
+routeMateriales.route('/data/materialXusuario/:id')
+        .get(x.materialXusuario);
+
+
 module.exports = routeMateriales;

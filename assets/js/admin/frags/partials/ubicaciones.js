@@ -1,65 +1,72 @@
 var app = angular.module('myapp');
 
-app.controller('ubicacionesCtrl', function($scope, $stateParams, Ubicacion) {
+app.controller('ubicacionesCtrl', function($scope, $stateParams, Ubicacion, alertas) {
 
-    $scope.seccion = 'ubicaciones';
+    var id = $stateParams.id
+    var status = $stateParams.status
 
-     $scope.seleccion = 0;
-
-    Ubicacion.obtenerConProyecto($scope.proyecto.id).then(function(data) {
-        console.log(data.data);
-        $scope.ubicaciones = data.data.Ubicacion;
-
-        _.map($scope.ubicaciones, ubcacionesft)
-        function ubcacionesft(n) {
+    Ubicacion.obtenerConProyecto(id)
+    .then(res => {
+        $scope.ubicaciones = res.data;
+        $scope.$digest();
+        return res.data
+    })
+    .then(result => {
+        _.map(result, function(n) {
             $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
-        }
-
+        })
     })
 
-    $scope.seleccionar = function(ubicacion){
-           $scope.seleccion = ubicacion.id;
-           $scope.ubicacion = ubicacion;
-           console.log($scope.seleccion);
-           $scope.formularioUbicacion = true;
-   }
+    $scope.seleccionar = function(ubicacion) {
+        $scope.seleccion = ubicacion.id;
+        $scope.ubicacion = ubicacion;
+        console.log($scope.seleccion);
+        $scope.formularioUbicacion = true;
+    }
 
-    $scope.submitUbicacion = function(ubicacion, proyecto){
+    $scope.submitUbicacion = function(ubicacion, proyecto) {
 
-       $scope.seleccion === 0 ? crear(ubicacion, proyecto) : update(ubicacion);
+        $scope.seleccion === 0
+            ? crear(ubicacion, proyecto)
+            : update(ubicacion);
 
-   }
+    }
 
-   function crear(ubicacion, proyecto){
+    function crear(ubicacion, proyecto) {
         console.log('estoy pasando')
 
-        Ubicacion.crear(ubicacion).then(function(data) {
+        Ubicacion.crear(ubicacion, id).then(res => {
+            $scope.ubicaciones.push(res.data);
             $scope.$digest();
-            $scope.ubicaciones.push(data.data);
-            console.log(data.data);
-
-            Ubicacion.unir(data.data.id, proyecto).then(function(data) {
-                console.log(data.data);
-            })
+            console.log(res.data);
             $scope.formularioUbicacion = false;
-
+            delete $scope.ubicacion
         })
-           
-       }
 
-       function update(ubicacion){
-           console.log(ubicacion);
+    }
+
+    function update(ubicacion) {
+        console.log(ubicacion);
         Ubicacion.editar(ubicacion).then(function(data) {
             console.log(data);
             $scope.formularioUbicacion = false;
         })
-       }
+    }
 
-       $scope.crearUbicacion = function(){
-           $scope.seleccion = 0;
-           $scope.ubicacion = {};
-           console.log($scope.seleccion);
-       }
+    $scope.crearUbicacion = function() {
+        $scope.seleccion = 0;
+        $scope.ubicacion = {};
+        console.log($scope.seleccion);
+    }
 
+    $scope.map = {
+        center: {
+            latitude: 19.1847524,
+            longitude: -96.1550328
+        },
+        zoom: 5
+    };
+
+    $scope.markers = [];
 
 });

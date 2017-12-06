@@ -1,42 +1,5 @@
 app.controller('adminCtrl', function($scope, $rootScope, $http, $mdDialog, mdDialog, $timeout, $stateParams, $mdSidenav, alertas, $state, Area, Campana, Proyectos, Imagen, Material, Ubicacion) {
 
-    $scope.cambiar = function(status) {
-        switch (status) {
-            case 1:
-                $state.go('paso1.pendiente')
-                break;
-            case 2:
-                $state.go('paso1.progreso')
-                break;
-            case 3:
-                $state.go('paso1.terminado')
-                break;
-            default:
-
-        }
-    }
-
-    $scope.obtenerProyecto = function() {
-        	console.log('Estoy funcionando');
-
-        // Proyectos.obtenerQ().then(function(data) {
-        //     console.log('Estoy funcionando 2');
-        //     console.log(data)
-        //     $scope.proyectos = data;
-        //     console.log($scope.proyectos);
-        // })
-
-        Proyectos.obtener().then(function(data) {
-			console.log('Estoy funcionando 2');
-            let info = data.data;
-            console.log(info)
-            $scope.proyectos = data.data;
-            console.log($scope.proyectos);
-            $scope.$digest();
-        });
-
-
-    }
 
     $scope.secciones = [
         {
@@ -147,6 +110,8 @@ app.controller('adminCtrl', function($scope, $rootScope, $http, $mdDialog, mdDia
             $state.go('proyectos')
         })
     };
+
+
     $scope.AbrirEvento = function() {
         $scope.formularioEvento = true;
     }

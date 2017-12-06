@@ -8,7 +8,8 @@
 		.pendiente-content(layout="row")
 			.left(flex)
 				.md-padding(layout="column")
-					.portada(style="background-image: url({{proyecto.Status.Pendiente.Imagenes[0].imagen}}); height: 300px; width: 100%")
+					.portada(style="background-image: url({{portada.imagen}}); height: 300px; width: 100%")
+					
 			.right(flex layout="column")
 				.comparte
 					p Ayudanos a llegar a más personas
@@ -22,11 +23,12 @@
 							p {{proyecto.Status.Pendiente.objetivos}}
 		h4 ¡Participa!
 		section(layout="row" style="width: 100%")
-			div(flex="70")
+			div(flex)
 				include frags/eventos			
 				md-divider
-				include frags/materiales				
-			include frags/ubicaciones
+				include frags/materiales
+			div(flex="30" ng-if="ubicaciones.length > 0")
+				include frags/ubicaciones
 
 		section
 			include frags/fotos

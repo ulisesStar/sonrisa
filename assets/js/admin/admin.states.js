@@ -13,26 +13,27 @@ app.config([
     '$stateProvider',
     function($urlRouterProvider, $stateProvider) {
 
-        function template(url, template, controller, oz) {
-            let obj = {
-                url: url,
-                views: {
-                    'main': {
-                        templateUrl: template,
-                        controller: controller + ' as ctrl'
-                    }
-                },
-                resolve: {
-                    loadMyCtrl: [
-                        '$ocLazyLoad',
-                        function($ocLazyLoad) {
-                            return $ocLazyLoad.load([oz]);
-                        }
-                    ]
-                }
-            }
-            return obj
-        }
+        function template(url, template, controller, oz, params) {
+    		let obj = {
+    			url: url,
+    			params: params,
+    			views: {
+    				'main': {
+    					templateUrl: template,
+    					controller: controller + ' as ctrl'
+    				}
+    			},
+    			resolve: {
+    				loadMyCtrl: [
+    					'$ocLazyLoad',
+    					function($ocLazyLoad) {
+    						return $ocLazyLoad.load([oz]);
+    					}
+    				]
+    			}
+    		}
+    		return obj
+    	}
 
         function pequenin(url, template, params) {
             let obj = {
@@ -51,8 +52,8 @@ app.config([
 
         $stateProvider
         .state('home',                  pequenin('/', '/admin/home'))
-        .state('proyectos',             pequenin('/proyectos', '/admin/proyectos'))
-        .state('proyecto',              template('/proyecto/:idProyecto', '/admin/infoProyectos', 'proyectosCtrl', 'ozAdminProyectos'))
+        .state('proyectos',             template('/proyectos', '/admin/proyectos', 'proyectosCtrl', 'ozAdminProyectos'))
+        .state('proyecto',              template('/proyecto/:id/:status/:nombre', '/admin/infoProyectos', 'proyectoCtrl', 'ozAdminProyecto', { 'id' : null , 'nombre' : null, 'status' : null}))
         .state('proyecto.info',         template('/info', '/admin/partials/info', 'infoCtrl', 'ozinfo'))
         .state('proyecto.eventos',      template('/eventos', '/admin/partials/eventos', 'eventosCtrl', 'ozeventos'))
         .state('proyecto.ubicaciones',  template('/ubicaciones', '/admin/partials/ubicaciones', 'ubicacionesCtrl', 'ozUbicaciones'))
@@ -95,8 +96,8 @@ app.config([
             }
         })
 
-        .state('nuevoproyecto', pequenin('/nuevoproyecto', '/admin/nuevoproyecto'))
-        .state('paso1', pequenin('/nuevoproyecto/paso1', '/admin/paso1'))
+        .state('nuevoproyecto',     template('/nuevoproyecto', '/admin/nuevoproyecto', 'nuevoproyectoCtrl', 'ozNuevoproyecto'))
+        .state('paso1',     template('/nuevoproyecto/paso1', '/admin/paso1', 'nuevoproyectoCtrl', 'ozNuevoproyecto'))
         .state('paso1.pendiente', pequenin('/pendiente', '/admin/status/pendiente'))
         .state('paso1.progreso', pequenin('/progreso', '/admin/status/progreso'))
         .state('paso1.terminado', pequenin('/terminado', '/admin/status/terminado'))

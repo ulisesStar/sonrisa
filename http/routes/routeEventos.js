@@ -7,6 +7,9 @@ routeEventos.route('/data/eventos')
         .get(x.read)
         .post(x.create);
 
+routeEventos.route('/data/eventosXproyecto/:id')
+        .get(x.eventosXproyecto);
+
 routeEventos.route('/data/eventos/:id')
         .get(x.read)
         .put(x.update)
@@ -17,5 +20,8 @@ routeEventos.route('/data/eventosProyectosStatus/:IdProyecto/:IdStatus')
 
 routeEventos.route('/data/eventosusuario/:IdEvento/:IdUsuario')
         .post(x.unir);
+
+routeEventos.route('/data/eventosXusuario/:id')
+        .get(x.eventosXusuario);
 
 module.exports = routeEventos;

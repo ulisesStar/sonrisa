@@ -65,10 +65,8 @@ md-sidenav md-icon {
   margin: 20px 0;
 }
 .proyecto section .creacion form .creacion-content md-input-container {
+  overflow: hidden;
   margin: 0px;
-}
-.proyecto section .creacion form .creacion-content md-input-container .md-errors-spacer {
-  position: absolute;
 }
 .proyecto section .creacion form .creacion-content.textarea .md-errors-spacer {
   position: initial;

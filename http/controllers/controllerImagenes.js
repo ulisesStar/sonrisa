@@ -11,8 +11,8 @@ ex.create = function (req, res, next) {
 
     var data = req.body;
     imagenes.create(data)
-            .then(function () {
-                res.status(200).jsonp(data);
+        .then(result => {
+            res.status(200).jsonp(result);
     });
 };
 
@@ -125,6 +125,20 @@ ex.read = function (req, res, next) {
                     res.status(200).jsonp(imagenes);
                 });
     }
+};
+
+ex.imagenXproyecto = function (req, res, next) {
+
+    var id = req.params.id;
+
+    imagenes.findAll({
+        where :{
+            id_proyecto : id
+        }
+    }).then(imagenes => {
+        res.status(200).jsonp(imagenes);
+    });
+
 };
 
 ex.crearPortada = function(req, res, next){

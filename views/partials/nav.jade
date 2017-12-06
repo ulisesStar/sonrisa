@@ -9,9 +9,11 @@
 			md-icon(md-svg-src="img/logo.svg")
 		h2 Cada niño una sonrisa
 	.profilebuttons(flex)
-		md-button.login(ng-if="!auth" ui-sref="loginyregistro") iniciar sesión
-		.auth(ng-if="auth === true" layout="row")
-			h2 Bienvenido {{usuario.nombre}}!
-			md-button.perfil( ui-sref="perfil" style="background-image:url({{usuario.fb_avatar}})")
-			md-button.logout(ng-click="logout();")
-				md-icon exit_to_app
+		.noauth(ng-if="!auth")
+			md-button.login( ui-sref="loginyregistro") iniciar sesión
+		.auth(ng-if="auth")
+			//- md-button()
+			//- 	md-icon menu
+			md-button.perfil(ng-click="menu($event)" style="background-image:url({{usuario.avatar.fb_avatar}})")
+			//- md-button.logout(ng-click="logout();")
+			//- 	md-icon exit_to_app

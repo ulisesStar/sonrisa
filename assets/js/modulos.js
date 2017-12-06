@@ -14,7 +14,10 @@ app.config([
                 }, {
                     name: 'ozAdminProyectos',
                     files: ['js/admin/frags/proyectos.js']
-                }, {
+                },{
+                   name: 'ozAdminProyecto',
+                   files: ['js/admin/frags/proyecto.js']
+               }, {
                     name: 'ozNosotros',
                     files: ['js/main/frags/nosotros.js']
                 }, {
@@ -49,6 +52,10 @@ app.config([
                 {
                     name: 'ozimagenes',
                     files: ['js/admin/frags/partials/imagenes.js']
+                },
+				{
+                    name: 'ozNuevoproyecto',
+                    files: ['js/admin/frags/nuevoproyecto.js']
                 }
             ]
         });

@@ -10,10 +10,7 @@ app.controller('homeCtrl', function($scope, $state, $rootScope, $timeout ,$state
     });
 
     $scope.posteo = function(){
-        mensaje = {message: 'Esto es un mensaje'}
-        FB.api('/me/feed', 'post', function(data){
-            console.log(data);
-        })
+        $state.go('proyectos.vista1')
     }
 
     $scope.vistas = [

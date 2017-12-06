@@ -2,19 +2,24 @@ var app = angular.module('myapp');
 
 app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen, alertas) {
 
-    $scope.seccion = 'imagenes';
+    var id = $stateParams.id
+    var status = $stateParams.status
 
+    // Imagen.obtenerStatus(id, status).then(res => {
+    //     $scope.imagenes = res.data;
+    //     console.log($scope.imagenes);
+    //     $scope.$digest();
+    //
+    // })
 
-    var idProyecto = $stateParams.idProyecto;
-
-    Imagen.obtenerStatus(idProyecto, $scope.proyecto.status_actual).then(res => {
+    Imagen.obtener(id).then(res => {
         $scope.imagenes = res.data;
-        console.log($scope.imagenes);
+        console.log(res);
         $scope.$digest();
 
     })
 
-    Imagen.obtenerPortada(idProyecto).then(res => {
+    Imagen.obtenerPortada(id).then(res => {
         $scope.portada = res.data;
         console.log(res)
         $scope.$digest();
@@ -45,8 +50,7 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
 
     function CrearPortada(imagen, proyecto){
 
-        imagen.id_proyecto = idProyecto;
-
+        imagen.id_proyecto = id;
         Imagen.portadaCrear(imagen).then(function(data) {
             $scope.portada = { imagen : imagen }
         })
@@ -55,27 +59,36 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
 
     function CrearNormal(imagen, proyecto) {
 
-        switch (proyecto.status_actual) {
-            case 1:
-                var IdStatus = proyecto.Status.Pendiente.id;
-                var ruta = 'imagenesconpendiente';
-                break;
-            case 2:
-                var IdStatus = proyecto.Status.Progreso.id;
-                var ruta = 'imagenesconprogreso';
-                break;
-            case 3:
-                var IdStatus = proyecto.Status.Terminado.id;
-                var ruta = 'imagenesconterminado';
-                break;
-            default:
-        }
+        // switch (proyecto.status_actual) {
+        //     case 1:
+        //         var IdStatus = proyecto.Status.Pendiente.id;
+        //         var ruta = 'imagenesconpendiente';
+        //         break;
+        //     case 2:
+        //         var IdStatus = proyecto.Status.Progreso.id;
+        //         var ruta = 'imagenesconprogreso';
+        //         break;
+        //     case 3:
+        //         var IdStatus = proyecto.Status.Terminado.id;
+        //         var ruta = 'imagenesconterminado';
+        //         break;
+        //     default:
+        // }
 
-        Imagen.crear(ruta, IdStatus, imagen).then(function(data) {
-            console.log(data);
-            $scope.imagenes.push(data.data.imagen);
+
+        imagen.id_proyecto = proyecto.id;
+
+
+        Imagen.crear(imagen).then(res => {
+            $scope.imagenes.push(res.data);
             $scope.$digest();
         })
+
+		// Imagen.crear(ruta, IdStatus, imagen).then(function(data) {
+        //     console.log(data);
+        //     $scope.imagenes.push(data.data.imagen);
+        //     $scope.$digest();
+        // })
     }
 
     $scope.eliminarImagen = function($index, id) {

@@ -7,10 +7,9 @@ section.info
             div(style="display: flex")
                 p Este proyecto tiene el status: 
                 p(ng-bind="status(proyecto.status_actual)")
-        form(ng-submit="editarProyecto(proyecto)" layout="column")
+        form(ng-submit="editar(proyecto)" layout="column")
             .infobasica.md-padding(layout="column" flex)
                 div(layout="row")
-                    
                     md-input-container(flex)
                         label Nombre del proyecto
                         input(ng-model="proyecto.nombre")
@@ -26,8 +25,8 @@ section.info
                 md-input-container(flex)
                     label Descripcion
                     textarea(ng-model="proyecto.descripcion" md-maxlength="150" rows="5")
-            
             md-divider
+            md-subheader Información relacionada con el status
             .md-padding
                 .pendiente(layout="column" flex ng-if="proyecto.status_actual === 1")
                     md-input-container(flex)

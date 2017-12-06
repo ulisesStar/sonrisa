@@ -6,6 +6,7 @@ var facebookStrategy = require('passport-facebook').Strategy; //Agregamos facebo
 var config = require('../../conf/oauth.js')
 
 var usuario = db.usuario;
+var avatar = db.avatar;
 var secret = 'cesar'; //creamos una variable para el token
 
 var ex = module.exports = {};
@@ -65,7 +66,11 @@ ex.read = function(req, res, next) {
     var id = req.params.id;
 
     if (id) {
-        usuario.findById(id).then(function(usuario) {
+        usuario.findById(id, {
+			include : [
+				{ model: avatar }
+			]
+		}).then(function(usuario) {
             res.status(200).jsonp(usuario);
         });
     } else {
@@ -227,17 +232,14 @@ passport.use('facebook', new facebookStrategy({
                 'fb_id': profile.id
             }
         }).then(function(user) {
-            console.log(profile);
             if (user) {
                 if(profile.photos){
                     user.update(
-                        {fb_avatar: profile.photos[0].value}
+                        { fb_avatar: profile.photos[0].value }
                     )
                 }
                 done(null, user);
             } else {
-
-                // console.log(profile);
 
                 var nombre = profile.displayName;
                 var correo = profile.displayName;
@@ -261,13 +263,16 @@ passport.use('facebook', new facebookStrategy({
                     nombre: nombre,
                     correo: correo,
                     fb_id: profile.id,
-                    fb_avatar: avatar_fb,
                     fb_token: accessToken
                 }
 
-                usuario.create(nuevousuario).then(function(user) {
+                usuario.create(nuevousuario).then(data => {
 
-                    return done(null, user);
+                    console.log(data)
+
+                    avatar.create({ id_usuario : data.id, fb_avatar: avatar_fb })
+
+                    return done(null, data);
 
                 }, function(err) {
                     throw err;

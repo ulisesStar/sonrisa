@@ -2,6 +2,7 @@ var db = require('../relations');
 var materiales = db.materiales;
 var proyectos = db.proyectos;
 var usuario = db.usuario;
+var avatar = db.avatar;
 
 var ex = module.exports = {};
 
@@ -57,15 +58,43 @@ ex.materialProyectos = function(req, res, next) {
         where: {
             id_proyecto: idproyecto
         },
-        include: [
-            {
-                model: usuario,
-                as: 'Usuario'
+		include : [
+			{
+                model : usuario,
+                as:'Usuario',
+                attributes: ['id'],
+                include : [
+                    {
+                        model: avatar,
+                        attributes: ['fb_avatar']
+                    }
+                ]
             }
-        ]
+		]
     }
     materiales.findAll(busqueda).then(function(materiales) {
         res.status(200).jsonp(materiales);
     });
+
+}
+
+
+ex.materialXusuario = function(req, res, next) {
+
+    var id = req.params.id;
+
+    console.log(materiales)
+
+    usuario.findById(id).then(user => {
+
+        user.getMateriales({
+            include : [
+                {model : proyectos}
+            ]
+        }).then(result => {
+            res.status(200).jsonp(result);
+        })
+
+    })
 
 }

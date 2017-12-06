@@ -7,8 +7,9 @@ var ex = function(conector) {
         id:{ type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
         nombre: Sequelize.STRING,
         descripcion: Sequelize.STRING,
-        fecha: Sequelize.DATE
-        
+        fecha: Sequelize.DATE,
+		status: Sequelize.INTEGER
+
     })
 
     return Eventos;

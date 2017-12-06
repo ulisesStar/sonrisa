@@ -10,7 +10,7 @@ app.controller('proyectosTerminadoCtrl', function($scope, $state, $stateParams, 
         var status = 3;
         if($scope.usuario === undefined){
             var token = $localStorage.token;
-            Usuario.token(token).then(data => {
+            AuthService.token(token).then(data => {
                 $scope.usuario = data.user;
             })
             console.log('obtuve el usuario');

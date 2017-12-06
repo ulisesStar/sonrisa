@@ -1,7 +1,11 @@
 var db = require('../relations');
+var Q = require('q');
+
+
 var eventos = db.eventos;
 var proyectos = db.proyectos;
 var usuario = db.usuario;
+var avatar = db.avatar;
 
 var ex = module.exports = {};
 
@@ -11,6 +15,34 @@ ex.create = function(req, res, next) {
     eventos.create(data).then(function(result) {
         res.status(200).jsonp(result);
     });
+
+};
+
+ex.eventosXproyecto = function(req, res, next) {
+
+    var id = req.params.id;
+
+    eventos.findAll({
+        where : {
+            id_proyecto : id
+        },
+		include : [
+			{
+                model : usuario,
+                as:'Usuario',
+                attributes: ['id'],
+                include : [
+                    {
+                        model: avatar,
+                        attributes: ['fb_avatar']
+                    }
+                ]
+            }
+		]
+    }).then(result => {
+        res.status(200).jsonp(result);
+    });
+
 };
 
 ex.delete = function(req, res, next) {
@@ -37,41 +69,56 @@ ex.update = function(req, res, next) {
 
 ex.eventosProyectosStatus = function(req, res, next){
 
-    var idstatus = req.params.IdStatus;
     var idproyecto = req.params.IdProyecto;
+    console.log(idproyecto)
+    var param = req.params.IdStatus;
+    console.log(param)
 
-    console.log(idstatus);
+    var switchCase = function(){
 
-    if(idstatus == 1){
-        var busqueda = {
-            where:{
-                id_pendiente: idproyecto
-            }
-        }
-    }
-    else
-        if(idstatus == 2){
-            var busqueda = {
-                where:{
-                    id_progreso: idproyecto
-                }
-            }
-        }
-        else
-            if(idstatus == 3){
-                var busqueda = {
+        var deferred = Q.defer();
+
+        switch(param) {
+            case '1':
+                deferred.resolve({
+                    where:{
+                        id_pendiente: idproyecto
+                    }
+                })
+                break;
+
+            case '2':
+                deferred.resolve({
+                    where:{
+                        id_progreso: idproyecto
+                    }
+                })
+                break;
+
+            case '3':
+                deferred.resolve({
                     where:{
                         id_terminado: idproyecto
                     }
-                }
-            }
+                })
+                break;
 
+            default:
+        }
 
-    console.log(busqueda);
+        return deferred.promise
+    }
 
-    eventos.findAll(busqueda).then(function (eventos) {
-        res.status(200).jsonp(eventos);
-    });
+    switchCase()
+    .then(consulta => {
+
+        console.log(consulta)
+        eventos.findAll(consulta)
+        .then(result => {
+            res.status(200).jsonp(result);
+        })
+    })
+    .done();
 
 }
 
@@ -102,5 +149,27 @@ ex.unir = function(req, res, next) {
 
     })
     .then(res.send.bind(res))
+    .catch(error => {
+        res.status(200).jsonp(error);
+    })
 
 };
+
+
+ex.eventosXusuario = function(req, res, next) {
+
+    var id = req.params.id;
+
+    usuario.findById(id).then(user => {
+
+        user.getEventos({
+            include : [
+                {model : proyectos}
+            ]
+        }).then(result => {
+            res.status(200).jsonp(result);
+        })
+
+    })
+
+}

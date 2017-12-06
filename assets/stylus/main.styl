@@ -10,6 +10,10 @@ azulObscuro = #2b92c1
 azulClaro = #68a4ce
 gris = #353535
 
+.panel
+    position absolute
+    pointer-events auto
+
 a = AmarilloObscuro
 b = azulClaro
 
@@ -130,6 +134,7 @@ body
     background: inherit
 
 footer
+	background-color grey
     position fixed
     bottom 0px
     width 100%
@@ -166,6 +171,20 @@ footer
     50%{background-position:100% 19%}
     100%{background-position:0% 82%}
 
+
+.perfil
+	.aportaciones
+        .titulo
+            display flex
+            md-icon
+                color AmarilloObscuro
+                margin auto 20px
+        md-list
+            md-list-item
+                .md-secondary-container
+                    .md-button
+                        background-color AmarilloObscuro
+                        color black
 
 .home
     .konva
@@ -225,7 +244,6 @@ footer
     .right
         .comparte
             p
-                background-color AmarilloClaro
                 border-radius 3px
                 text-align center
                 margin 0px
@@ -233,7 +251,7 @@ footer
             display inline-block
             .md-button
                 margin 0px
-                background-color AmarilloObscuro
+                background-color #475993
                 width 100%
                 md-icon
                     margin auto 20px
@@ -256,7 +274,7 @@ footer
     h4
         margin 0px
 
-    .evento, .materiales
+    .eventos, .materiales
         margin 25 0
 
     md-list
@@ -281,19 +299,32 @@ footer
             p
                 margin auto 20
             .cantidad,.fecha
-                min-width 50px
+                min-width 100px
                 text-align right
                 color gris
                 z-index 2
             md-card
                 background-color AmarilloObscuro
                 z-index 2
+                margin 0 20px
+                height 35px
+                cursor pointer
+                transition(100ms, 0)
+                &.conHover
+                    transform scale(.9)
             .md-secondary-container
+                height 35px
                 padding 0px
                 z-index 2
                 .md-button
                     background-color white
                     color black
+                .usuario
+                    height 35px
+                    img
+                        height 35px
+                        width auto
+                        border-radius 35px
     .fotos
         width 100%
         margin-bottom 100px
@@ -302,6 +333,10 @@ footer
                 background-size cover
                 background-position center center
                 background-repeat no-repeat
+                fotografia
+                    img
+                        height 100%
+                        width auto
 
     .anecdotas
         .anecdotas-content
@@ -368,6 +403,16 @@ footer
                     margin 10px 0;
                 margin-bottom 10px
             md-card
+                imagenproducto
+                    .md-card-image
+                        width 100%
+                    width 100%
+                    overflow hidden
+                    display flex
+                    md-progress-circular
+                        margin auto
+                    img
+                        width 100%
                 width 100%
                 margin 0px
                 md-grid-list

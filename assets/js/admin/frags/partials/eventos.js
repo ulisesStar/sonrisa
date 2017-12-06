@@ -1,71 +1,63 @@
 var app = angular.module('myapp');
 
-app.controller('eventosCtrl', function($scope, $state, $rootScope, $timeout, $stateParams, $http, Evento) {
+app.controller('eventosCtrl', function($scope, $state, $rootScope, $timeout, $stateParams, Proyectos, Evento, alertas) {
 
-    var idProyecto = $stateParams.idProyecto;
+
+    var id = $stateParams.id;
+    var status = $stateParams.status
 
     $scope.seleccion = 0;
 
-    Evento.obtenerStatus(idProyecto, $scope.proyecto.status_actual).then(function(data) {
-        $scope.eventos = data.data;
+    Evento.proyecto(id).then(res => {
+        console.log(res)
+        $scope.eventos = res.data;
         $scope.$digest();
         console.log($scope.eventos);
     })
 
-        $scope.seleccionar = function(evento){
-           $scope.seleccion = evento.id;
-           $scope.evento = evento;
-           console.log($scope.seleccion);
-           $scope.formularioEvento = true;
-       }
+    $scope.focus = function(evento){
 
-        $scope.submitEvento = function(evento, status, proyecto){
+        console.log('se hizo focus')
+        evento ? ($scope.evento = evento) : ($scope.evento = {});
+    }
 
-           $scope.seleccion === 0 ? crear(evento, status, proyecto) : update(evento);
+    $scope.clear = function(){
 
-       }
+        console.log('se clear')
+        delete $scope.evento;
+    }
 
-       function crear(evento, status, proyecto){
-            console.log('estoy creando')
-            console.log(evento);
-            console.log(status);
-            console.log(proyecto);
+    $scope.submit = function(evento){
+        //
+        console.log(id)
+        evento.id_proyecto = id;
 
-        switch (status) {
-            case 1:
-                evento.id_pendiente = proyecto;
+        evento.id === undefined ? (
 
-                break;
-            case 2:
-                evento.id_progreso = proyecto;
+            console.log(evento),
 
-                break;
-            case 3:
-                evento.id_terminado = proyecto;
+			Evento.crear(evento).then(res => {
+		           alertas.mostrarToastEstandar("Se ha creado el evento");
+		           $scope.eventos.push(res.data);
+		           delete $scope.evento
+		    })
 
-                break;
-        }
+        ) : (
 
-        $http.post('/data/eventos', evento).success(function(data) {
-            $scope.eventos.push(data);
-            $scope.evento = {};
-        }).error(function(err) {
-            console.log(err)
-            alertas.mostrarToastEstandar("No se pudo crear el evento");
+            Evento.editar(evento).then(res => {
+                alertas.mostrarToastEstandar("Se ha editado el evento");
+		        delete $scope.evento
+
+            })
+        );
+
+        console.log(evento)
+    }
+
+    $scope.eliminar = function(evento){
+        Evento.eliminar(evento.id).then(data => {
+            alertas.mostrarToastEstandar("Evento eliminada");
         })
-       }
-
-       function update(evento){
-           console.log('estoy editando')
-           Evento.editar(evento).then(function(data) {
-               console.log(data);
-           })
-       }
-
-       $scope.crearEvento = function(){
-           $scope.seleccion = 0;
-           $scope.evento = {};
-           console.log($scope.seleccion);
-       }
+    }
 
 });

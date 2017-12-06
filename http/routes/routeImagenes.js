@@ -8,6 +8,9 @@ routeImagenes.route('/data/imagenes')
         .post(x.create);
 
 
+routeImagenes.route('/data/imagenXproyecto/:id')
+        .get(x.imagenXproyecto);
+
 routeImagenes.route('/data/imagenesconpendiente/:IdPendiente')
         .post(x.ImagenProyecto);
 

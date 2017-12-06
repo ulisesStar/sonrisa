@@ -4,13 +4,59 @@ var proyectos = db.proyectos;
 
 var ex = module.exports = {};
 
+// ex.create = function(req, res, next) {
+//
+//     var data = req.body;
+//
+//     console.log(data);
+//
+//     ubicacion.create(data)
+//         .then(function(result) {
+//             res.status(200).jsonp(result);
+//         });
+// };
+//
+//
+// ex.CrearConUbicacion = function (req, res, next) {
+//
+//     var idubicacion = req.params.idubicacion;
+//     var idproyectos = req.params.idproyectos;
+//
+//    ubicacion.findById(idubicacion)
+//     .then(function(ubicacion){
+//         return ubicacion.addProyectos(idproyectos)
+//     })
+//     .then(res.send.bind(res))
+//     .catch(next);
+// };
+
 ex.create = function(req, res, next) {
 
     var data = req.body;
+
+    var idproyectos = req.params.id;
+
+    console.log(data);
+
     ubicacion.create(data)
         .then(function(result) {
+            result.addProyectos(idproyectos)
             res.status(200).jsonp(result);
         });
+};
+
+
+ex.CrearConUbicacion = function (req, res, next) {
+
+    var idubicacion = req.params.idubicacion;
+    var idproyectos = req.params.idproyectos;
+
+   ubicacion.findById(idubicacion)
+    .then(function(ubicacion){
+        return ubicacion.addProyectos(idproyectos)
+    })
+    .then(res.send.bind(res))
+    .catch(next);
 };
 
 ex.delete = function(req, res, next) {
@@ -62,16 +108,4 @@ ex.read = function(req, res, next) {
         //             res.status(200).jsonp(ubicacion);
         //         });
     }
-};
-ex.CrearConUbicacion = function (req, res, next) {
-
-    var idubicacion = req.params.idubicacion;
-    var idproyectos = req.params.idproyectos;
-
-   ubicacion.findById(idubicacion)
-    .then(function(ubicacion){
-        return ubicacion.addProyectos(idproyectos)
-    })
-    .then(res.send.bind(res))
-    .catch(next);
 };

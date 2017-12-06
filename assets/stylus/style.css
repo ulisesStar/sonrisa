@@ -1,0 +1,21 @@
+.layout-row>div {
+  max-height: inherit !important;
+}
+footer {
+  background-color: #edede8;
+}
+footer .starbrand {
+  margin: 50px 10px;
+  display: flex;
+  color: #000;
+}
+footer .starbrand p {
+  font-size: 16px;
+}
+footer .starbrand md-icon {
+  height: 50px;
+  width: 200px;
+}
+footer .starbrand md-icon path {
+  fill: #000 !important;
+}

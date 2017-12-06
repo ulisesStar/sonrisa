@@ -1,3 +1,7 @@
+.panel {
+  position: absolute;
+  pointer-events: auto;
+}
 .main,
 footer {
   position: relative;
@@ -123,20 +127,20 @@ header .menu .md-button {
 body {
   background: inherit;
 }
-footer {
+footer background-color grey {
   position: fixed;
   bottom: 0px;
   width: 100%;
   height: 35px;
 }
-footer .starbrand {
+footer background-color grey .starbrand {
   display: flex;
   color: #fff;
 }
-footer .starbrand md-icon {
+footer background-color grey .starbrand md-icon {
   width: 100px;
 }
-footer .md-button {
+footer background-color grey .md-button {
   border-radius: 0px;
   color: #fff;
 }
@@ -172,6 +176,17 @@ footer .md-button {
   100% {
     background-position: 0% 82%;
   }
+}
+.perfil .aportaciones .titulo {
+  display: flex;
+}
+.perfil .aportaciones .titulo md-icon {
+  color: #f7d64c;
+  margin: auto 20px;
+}
+.perfil .aportaciones md-list md-list-item .md-secondary-container .md-button {
+  background-color: #f7d64c;
+  color: #000;
 }
 .home .konva {
   top: 0;
@@ -234,7 +249,6 @@ footer .md-button {
   display: inline-block;
 }
 .proyecto .right .comparte p {
-  background-color: #f8de74;
   border-radius: 3px;
   text-align: center;
   margin: 0px;
@@ -242,7 +256,7 @@ footer .md-button {
 }
 .proyecto .right .comparte .md-button {
   margin: 0px;
-  background-color: #f7d64c;
+  background-color: #475993;
   width: 100%;
 }
 .proyecto .right .comparte .md-button md-icon {
@@ -270,7 +284,7 @@ footer .md-button {
 .proyecto h4 {
   margin: 0px;
 }
-.proyecto .evento,
+.proyecto .eventos,
 .proyecto .materiales {
   margin: 25 0;
 }
@@ -303,7 +317,7 @@ footer .md-button {
 }
 .proyecto md-list md-list-item .cantidad,
 .proyecto md-list md-list-item .fecha {
-  min-width: 50px;
+  min-width: 100px;
   text-align: right;
   color: #353535;
   z-index: 2;
@@ -311,14 +325,33 @@ footer .md-button {
 .proyecto md-list md-list-item md-card {
   background-color: #f7d64c;
   z-index: 2;
+  margin: 0 20px;
+  height: 35px;
+  cursor: pointer;
+  -webkit-transition: all 100ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  transition: all 100ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  -webkit-transition-delay: 0;
+  transition-delay: 0;
+}
+.proyecto md-list md-list-item md-card.conHover {
+  transform: scale(0.9);
 }
 .proyecto md-list md-list-item .md-secondary-container {
+  height: 35px;
   padding: 0px;
   z-index: 2;
 }
 .proyecto md-list md-list-item .md-secondary-container .md-button {
   background-color: #fff;
   color: #000;
+}
+.proyecto md-list md-list-item .md-secondary-container .usuario {
+  height: 35px;
+}
+.proyecto md-list md-list-item .md-secondary-container .usuario img {
+  height: 35px;
+  width: auto;
+  border-radius: 35px;
 }
 .proyecto .fotos {
   width: 100%;
@@ -328,6 +361,10 @@ footer .md-button {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+}
+.proyecto .fotos md-grid-list md-grid-tile fotografia img {
+  height: 100%;
+  width: auto;
 }
 .proyecto .anecdotas .anecdotas-content {
   margin: 50px 0;
@@ -408,6 +445,20 @@ footer .md-button {
 .proyectos .proyectos-container .vista1 md-card {
   width: 100%;
   margin: 0px;
+}
+.proyectos .proyectos-container .vista1 md-card imagenproducto {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+}
+.proyectos .proyectos-container .vista1 md-card imagenproducto .md-card-image {
+  width: 100%;
+}
+.proyectos .proyectos-container .vista1 md-card imagenproducto md-progress-circular {
+  margin: auto;
+}
+.proyectos .proyectos-container .vista1 md-card imagenproducto img {
+  width: 100%;
 }
 .proyectos .proyectos-container .vista1 md-card md-grid-list md-grid-tile {
   background-position: center center;

@@ -1,20 +1,20 @@
 var app = angular.module('myapp');
 
-app.controller('proyectosProgresosCtrl', function($scope, $state, $stateParams, $localStorage ,$rootScope, $http, $mdDialog, ProyectosProgreso, Evento, Imagen, Usuario, Anecdota, Facebook) {
+app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $stateParams, $localStorage, $mdDialog, ProyectosProgreso, Evento, Imagen, Usuario, Anecdota, Material, Portada, Ubicacion, Facebook, AuthService, Aportaciones) {
 
     $scope.loaderProyectoProgreso = true;
     if($stateParams.proyecto === null){
         $state.go('proyectos.vista1')
     }else{
+
         var idproyecto = $stateParams.proyecto;
         var status = 2;
+
         if($scope.usuario === undefined){
-            var token = $localStorage.token;
-            Usuario.token(token).then(data => {
+            AuthService.token($localStorage.token).then(data => {
                 $scope.usuario = data.user;
             })
         }
-
 
         $scope.map = {
             center: {
@@ -27,66 +27,160 @@ app.controller('proyectosProgresosCtrl', function($scope, $state, $stateParams, 
         $scope.markers = [];
 
 
-        ProyectosProgreso.obtener(idproyecto).then(function(data) {
-            $scope.proyecto = data;
-            console.log(data);
+        ProyectosProgreso.obtener(idproyecto).then(res => {
+            $scope.proyecto = res.data;
+            console.log(res);
             $scope.loaderProyectoProgreso = false;
-            _.map(data.data.Ubicacion, ubcacionesft)
-            function ubcacionesft(n) {
-                $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
-            }
 
-            data.data.materiales.forEach(material => {
-                material.recaudado = 0;
-                let index
-                material.Usuario.forEach(user => {
-                    index++
-                    material.recaudado = material.recaudado + user.Aportaciones.contribucion;
+            // _.map(data.data.Ubicacion, ubcacionesft)
+            // function ubcacionesft(n) {
+            //     $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
+            // }
+
+            // data.data.materiales.forEach(material => {
+            //     material.recaudado = 0;
+            //     let index
+            //     material.Usuario.forEach(user => {
+            //         index++
+            //         material.recaudado = material.recaudado + user.Aportaciones.contribucion;
+            //     })
+            // })
+
+			// $scope.Eventos = data.Status.Progreso.Eventos;
+
+            return res.data.id
+        }).then(id => {
+
+            Portada.obtener(id).then(res => {
+                $scope.portada = res.data;
+            })
+
+            Imagen.obtener(id).then(res => {
+				$scope.imagenes = res.data;
+				console.log(res);
+				$scope.$digest();
+
+			})
+
+            Ubicacion.obtenerConProyecto(id).then(res => {
+                $scope.ubicaciones = res.data;
+                return res.data
+            }).then(result => {
+                _.map(result, function(n) {
+                    $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
                 })
             })
 
-			$scope.Eventos = data.Status.Progreso.Eventos;
+            Anecdota.obtener(id).then(res => {
+                $scope.anecdotas = res.data;
+            })
+
+            obtenerMateriales()
+            obtenerEventos()
 
         })
-
-        obtenerEventos();
-
-
-        Imagen.obtenerStatus(idproyecto, status).then(function(data) {
-            $scope.imagenes = data;
-        })
-
     }
-
     function obtenerMateriales() {
         let proyecto = $stateParams.proyecto;
-        Material.obtenerConProyecto(proyecto).then(data => {
-            $scope.proyecto.materiales = data;
+        Material.obtenerConProyecto(proyecto).then(res => {
+            $scope.materiales = res.data;
+            $scope.$digest()
         })
     }
 
     function obtenerEventos() {
-        Evento.obtenerStatus(idproyecto, status).then(function(data) {
-            console.log(data);
-            $scope.Eventos = data;
+        console.log('voy')
+        Evento.proyecto(id).then(res => {
+            $scope.eventos = res.data;
+            $scope.$digest()
         })
     }
 
-    function obtenerAnecdotas(){
-        Anecdota.obtener(idproyecto).then(data => {
-            $scope.anecdotas = data;
-            console.log(data);
-        })
+    $scope.donarMateriales = function(material, ev) {
+
+        $scope.usuario !== undefined ? (
+
+            $mdDialog.show(
+                $mdDialog.prompt()
+                .title('¿Quiere aportar a esta causa?')
+                .textContent('Empieza por introducir su titulo')
+                .placeholder('Piezas para contribuir')
+                .ok('Muchas Gracias por tu donativo')
+                .cancel('Me arrepenti')
+            ).then(result => {
+
+                Aportaciones.unir({
+                    id_materiales: material.id,
+                    id_usuario: $scope.usuario.id,
+                    contribucion: result
+                }).then(data => {
+                    obtenerMateriales()
+                });
+
+            }, function() {
+                console.log('no confirmo')
+            })
+
+        ) : (
+
+            alert = $mdDialog.alert({
+                title: 'Inicia Sesión',
+                textContent: 'Debes iniciar Sesión para donar a este proyecto',
+                ok: 'Close'
+            }),
+
+            $mdDialog
+            .show( alert )
+            .finally(function() {
+              alert = undefined;
+            })
+
+        )
+
+
     }
 
-    $scope.facebook = function(){
+    $scope.inscribirseEvento = function(evento, ev) {
 
-        let contenido = 'algo'
+        $scope.usuario !== undefined ? (
 
-        Facebook.crear(contenido, $scope.usuario).then(data => {
-            console.log(data);
-        })
+            ventana = $mdDialog.confirm()
+            .title('Estas apunto de inscribirte al evento "' + evento.nombre + '"')
+            .textContent(evento.descripcion)
+            .ok('Aceptar')
+            .cancel('Cerrar')
+            .clickOutsideToClose(true),
+
+            $mdDialog.show(ventana).then(result => {
+
+                delete $scope.eventos
+
+                Evento.unir(evento.id, $scope.usuario.id)
+                .then(data => {
+                    obtenerEventos()
+                })
+
+            }, function() {
+                console.log('no confirmo')
+            })
+
+        ) : (
+
+            alert = $mdDialog.alert({
+                title: 'Inicia Sesión',
+                textContent: 'Debes iniciar Sesión para inscribite a este evento',
+                ok: 'Close'
+            }),
+
+            $mdDialog
+            .show( alert )
+            .finally(function() {
+              alert = undefined;
+            })
+
+        )
     }
+
 
 	$scope.crearAnecdota = function(contenido){
 
@@ -101,85 +195,15 @@ app.controller('proyectosProgresosCtrl', function($scope, $state, $stateParams, 
 		})
 	}
 
-	$scope.donarMateriales = function(material, ev) {
-        $mdDialog.show({
-            templateUrl: '/partials/materiales',
-            parent: angular.element(document.body),
-            locals: {
-                material: material,
-                usuario: $scope.usuario
-            },
-            bindToController: true,
-            preserveScope: true,
-            fullscreen: $scope.customFullscreen,
-            controller: DialogController
-        }).then(data => {
-            obtenerMateriales();
-            $scope.$apply();
-        });
-        function DialogController($scope, $mdDialog, material, usuario) {
+    $scope.facebook = function(){
 
-            $scope.material = material;
-            $scope.usuario = usuario;
-            // console.log($scope.usuario);
-            // console.log($scope.material);
+        let contenido = 'algo'
 
-            $scope.unir = function(cantidad) {
-                union = {
-                    id_materiales: material.id,
-                    id_usuario: usuario.id,
-                    contribucion: cantidad
-                }
-
-                let proyecto = $stateParams.proyecto;
-                Aportaciones.unir(union).then(data => {
-                    let status = true;
-                    $mdDialog.hide(status);
-                });
-            }
-
-            $scope.close = function() {
-                let status = false;
-                $mdDialog.hide(status);
-            }
-        }
+        Facebook.crear(contenido, $scope.usuario).then(data => {
+            console.log(data);
+        })
     }
 
-    $scope.inscribirseEvento = function(evento, ev) {
 
-        $mdDialog.show({
-            templateUrl: '/partials/evento',
-            parent: angular.element(document.body),
-            locals: {
-                evento: evento,
-                usuario: $scope.usuario
-            },
-            bindToController: true,
-            preserveScope: true,
-            fullscreen: $scope.customFullscreen,
-            controller: DialogController
-        }).then(data => {
-            obtenerEvento();
-            $scope.$apply();
-        });
-        function DialogController($scope, $mdDialog, evento, usuario) {
-
-            $scope.evento = evento;
-            $scope.usuario = usuario;
-
-            $scope.unir = function() {
-
-                Evento.unir(evento.id, usuario.id).then(data => {
-                    let status = true;
-                    $mdDialog.hide(status);
-                });
-            }
-
-            $scope.close = function() {
-                let status = false;
-                $mdDialog.hide(status);
-            }
-        }
-    }
 
 });
