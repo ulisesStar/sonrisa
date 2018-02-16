@@ -9,7 +9,7 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
     //     $scope.imagenes = res.data;
     //     console.log($scope.imagenes);
     //     $scope.$digest();
-    //
+    // 
     // })
 
     Imagen.obtener(id).then(res => {
@@ -42,7 +42,8 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
 
             case 'normal':
                 console.log('normal')
-                CrearNormal(imagen, proyecto)
+                CrearNormal(imagen, proyecto);
+                $scope.$digest();
                 break;
             default:
         }
@@ -50,30 +51,17 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
 
     function CrearPortada(imagen, proyecto){
 
-        imagen.id_proyecto = id;
+        imagen.id_proyecto = proyecto.id;
         Imagen.portadaCrear(imagen).then(function(data) {
-            $scope.portada = { imagen : imagen }
+            console.log(data);
+            $scope.portada =  data.data
+            console.log($scope.portada);
+            $scope.$digest();
         })
 
     }
 
     function CrearNormal(imagen, proyecto) {
-
-        // switch (proyecto.status_actual) {
-        //     case 1:
-        //         var IdStatus = proyecto.Status.Pendiente.id;
-        //         var ruta = 'imagenesconpendiente';
-        //         break;
-        //     case 2:
-        //         var IdStatus = proyecto.Status.Progreso.id;
-        //         var ruta = 'imagenesconprogreso';
-        //         break;
-        //     case 3:
-        //         var IdStatus = proyecto.Status.Terminado.id;
-        //         var ruta = 'imagenesconterminado';
-        //         break;
-        //     default:
-        // }
 
 
         imagen.id_proyecto = proyecto.id;
@@ -83,12 +71,6 @@ app.controller('imagenesCtrl', function($scope, $stateParams, $mdDialog, Imagen,
             $scope.imagenes.push(res.data);
             $scope.$digest();
         })
-
-		// Imagen.crear(ruta, IdStatus, imagen).then(function(data) {
-        //     console.log(data);
-        //     $scope.imagenes.push(data.data.imagen);
-        //     $scope.$digest();
-        // })
     }
 
     $scope.eliminarImagen = function($index, id) {

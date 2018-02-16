@@ -84,10 +84,11 @@ app.config([
                 'main': {
                     templateUrl: '/admin/infoCampanas',
                     controller: function($scope, $stateParams, $rootScope, $http) {
-                        $scope.campanas = {};
+                        $scope.campana = {};
                         var idCampana = $stateParams.idCampana;
                         $http.get('/data/campanas/' + idCampana).then(function(data) {
-                            $scope.campanas = data.data;
+                            $scope.campana = data.data;
+                            console.log($scope.campana);
                             console.log(data);
                         });
                     }

@@ -4,12 +4,13 @@
             .md-toolbar-tools
                 h4 Editar Programa
                 span(flex)
-                md-button(md-colors="{background: 'red'}" ng-click="eliminarCampana(id)")
+                md-button(md-colors="{background: 'red'}" ng-click="eliminarCampana(campana.id)")
                     md-icon clear
-        form(ng-submit="editarCampana(campanas)" layout="column")
+        img(src="{{campana.logo}}" class="md-card-image" alt="Imagen logo")
+        form(ng-submit="editarCampana(campana)" layout="column")
             .image-container(flex="50" ng-init="Dropify()")
                 .dropify-container(ng-init="Dropify()" flex ng-hide="inputImage")
-                    input.dropify(type="file" data-default-file="Imagen de la campanas" ng-model="campanas.logo" base-sixty-four-input maxsize="5120" data-max-file-size="1000K" accept="image/*" style="padding:0px;")
+                    input.dropify(type="file" data-default-file="Imagen de la campanas" ng-model="campana.logo" base-sixty-four-input maxsize="5120" data-max-file-size="1000K" accept="image/*" style="padding:0px;")
                 .croppie-container(flex ng-show="inputImage")
                     ng-croppie(src="inputImage"
                         ng-model='campanas.logo'
@@ -20,16 +21,15 @@
                         zoom="true" 
                         orientation="90"
                         type="square")  
-
             md-input-container(flex)
                 label Cambiar Nombre
-                input(ng-model="campanas.nombre" )
+                input(ng-model="campana.nombre" )
             md-input-container(flex)
                 label Cambiar Descripcion
-                input(ng-model="campanas.descripcion")
+                input(ng-model="campana.descripcion")
             md-input-container(flex)
                 label Cambiar Fecha
-                md-datepicker(ng-model="campanas.fecha")
+                md-datepicker(ng-model="campana.fecha")
             md-button(type="submit"  md-colors="{background: 'green'}")
                 md-icon save
             

@@ -95,7 +95,7 @@ app.directive('konva', function() {
 
     var tl = new TimelineLite({repeat:1});
 
-    var time = 4;
+    var time = 1;
 
     tl
         .to(tmpColors, 0, { colorProps: { color0: '#ff2400', color1: '#e81d1d' }, ease: Linear.easeNone, onUpdate: applyProps })
@@ -116,4 +116,5 @@ app.directive('konva', function() {
         layer.batchDraw();
     }
 
+    
 });

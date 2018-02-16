@@ -1,5 +1,5 @@
 var express = require('express');
-var routeProyectos = express.Router();
+var routeProyectos = express.Router(); 
 
 var x = require("../controllers/controllerProyectos");
 

@@ -43,7 +43,8 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
                 break;
             default:
         }
-	}
+    }
+    
 
     $scope.cambiar = function(bandera){
 
@@ -135,7 +136,7 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
                 $scope.pedirTerminados();
                 break;
             default:
-        }
+        } 
     }
 
     $scope.pedirPendientes = function(){
@@ -144,7 +145,7 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
         Proyectos.filtro($scope.busquedaPendiente).then(function(data){
             $scope.pendientes = data.data;
             $scope.loadingPendientes = false;
-            console.log(data);
+            console.log(data.data);
         })
     }
 
@@ -154,7 +155,7 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
         Proyectos.filtro($scope.busquedaProgresos).then(function(data){
             $scope.progresos = data.data;
             $scope.loadingProgresos = false;
-            console.log(data);
+            console.log(data.data);
         })
     }
 
@@ -164,7 +165,7 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
         Proyectos.filtro($scope.busquedaTerminados).then(function(data){
             $scope.terminados = data.data;
             $scope.loadingTerminados = false;
-            console.log(data);
+            console.log(data.data);
         })
     }
 
@@ -202,10 +203,13 @@ app.controller('proyectosCtrl', function($scope, $state, $rootScope, $http, mdDi
         $scope.pedirProgresos();
         $scope.busquedaTerminados.where.id_campanas = item.id;
         $scope.pedirTerminados();
-
+        console.log('esto buscó');
         console.log($scope.busquedaPendiente);
         console.log($scope.busquedaProgresos);
         console.log($scope.busquedaTerminados);
+
+        $scope.digest();
     }
 
 });
+

@@ -1,0 +1,8 @@
+md-card
+    h1 Nuevo Objetivo
+    md-card-content(layout="column")
+        md-input-container
+            label Objetivo
+            input(ng-model="objetivo.objetivo")
+        md-button(type="submit" ng-click="agregarObjetivo(objetivo)")
+            md-icon add

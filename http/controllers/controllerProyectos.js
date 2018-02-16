@@ -26,50 +26,24 @@ ex.create = function(req, res, next) {
 
     proyectos.create(data).then(function(result) {
 
-        pendiente.create(data.pendiente).then(res => {
-            res.addProyecto(result.id);
-        })
-        progreso.create(data.progreso).then(res => {
-            res.addProyecto(result.id);
-        })
-        terminado.create(data.terminado).then(res => {
-            res.addProyecto(result.id);
-        })
+        Promise.all([
 
+
+            pendiente.create(data.pendiente).then(res => {
+                res.addProyecto(result.id);
+            }),
+            progreso.create(data.progreso).then(res => {
+                res.addProyecto(result.id);
+            }),
+            terminado.create(data.terminado).then(res => {
+                res.addProyecto(result.id);
+            })
+
+        ]).then(promses => {
+            res.status(200).jsonp({proyecto : result, promesas : promses});
+            }
+        )
     });
-
-    //
-    // function first(){
-    //
-    //     var result = {}
-    //
-        // pendiente.create(data.pendiente).then(res => { result.id_pendiente = res.id })
-        // progreso.create(data.progreso).then(res => { result.id_progreso = res.id })
-        // terminado.create(data.terminado).then(res => { result.id_terminado = res.id })
-    //
-    //     result.id_pendiente = 1
-    //
-    //     return result
-    //
-    // }
-    //
-    // first()
-    // .then(x => {
-    //
-    //     console.log(x)
-    //
-    //     status.create(x).then(res => {
-    //
-    //
-    //     })
-    //
-    //     // proyectos.create(data).then(result => {
-    //     //     res.status(200).jsonp(result);
-    //     //
-    //     // })
-    //
-    // })
-
 };
 
 ex.proyectosLite = function(req, res, next) {
@@ -134,19 +108,11 @@ ex.terminado = function(req, res, next) {
     var id = req.params.id;
 
     proyectos.findById(id, {
+        attributes: ['id','nombre', 'descripcion'],
         include: [
             {
-                model: status,
-                include: [
-                    {
-                        model: terminado,
-                        // include: [
-                        //     {
-                        //         model: imagenes
-                        //     }
-                        // ]
-                    }
-                ]
+                model: terminado,
+                as : 'Terminado'
             }
         ]
     }).then(function(result) {
@@ -237,6 +203,7 @@ ex.update = function(req, res, next) {
         }
     }).then(result => {
         res.status(200).jsonp(result);
+        console.log(result);
     })
     // pendiente.update(infopendiente, {
     //     where: {
@@ -278,30 +245,6 @@ ex.filtro = function(req, res, next) {
         default:
     }
 
-    // _.updateWith(data, 'include[' + data.include.length + ']', _.constant(
-    //     {
-    //         model: status,
-    //         model: portada
-    //         include: [
-    //             {
-    //                 model: statusactual,
-    //                 attributes : ['id'],
-    //                 include: [
-    //                     {
-    //                         model: imagenes,
-    //                         attributes : ['imagen'],
-    //                         where: {
-    //                             portada: 1
-    //                         }
-    //                     }
-    //                 ]
-    //             },
-    //
-    //
-    //         ]
-    //     }
-    // ), data);
-
     var indexAreas = _.findIndex(data.include, ['model', 'areas']);
 
     if (indexAreas != -1) {
@@ -310,55 +253,14 @@ ex.filtro = function(req, res, next) {
 
     data.attributes = ['id','nombre'];
 
+    console.log(data);
+
     proyectos.findAll(data).then(result => {
 
 
         res.status(200).jsonp(result);
 
         var index = 0;
-
-        // _.forEach(proyectos, function(proyecto) {
-        //
-        //     switch (data.where.status_actual) {
-        //         case 1:
-        //             var path = proyecto.Status.Pendiente.Imagenes[0].imagen;
-        //             break;
-        //         case 2:
-        //             var path = proyecto.Status.Progreso.Imagenes[0].imagen;
-        //             break;
-        //
-        //         case 3:
-        //             var path = proyecto.Status.Terminado.Imagenes[0].imagen;
-        //             break;
-        //         default:
-        //     }
-        //
-        //     let ni = _.split(path, ',', 2);
-        //     Jimp.read(Buffer.from(ni[1], 'base64'), function(err, image) {
-        //         image.resize(290, 183).getBase64("image/jpeg", (err, Buff) => {
-        //
-        //             switch (data.where.status_actual) {
-        //                 case 1:
-        //                     proyectos[index].Status.Pendiente.Imagenes[0].imagen = Buff;
-        //                     break;
-        //                 case 2:
-        //                     proyectos[index].Status.Progreso.Imagenes[0].imagen = Buff;
-        //                     break;
-        //
-        //                 case 3:
-        //                     proyectos[index].Status.Terminado.Imagenes[0].imagen = Buff;
-        //                     break;
-        //                 default:
-        //             }
-        //
-        //             index++;
-        //             if (index === proyectos.length) {
-        //                 res.status(200).jsonp(proyectos);
-        //             }
-        //         });
-        //     });
-        //
-        // });
 
     });
 

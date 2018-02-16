@@ -1,14 +1,18 @@
-.menu(layout="row")
-	.opciones(flex)
+.menu(layout="row" )
+	md-button(ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu")
+		md-icon menu
+	.opciones(hide show-gt-md flex)
 		md-nav-bar(md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links")
 			//- md-nav-item(md-nav-sref="home" name="home") Home
 			md-nav-item(md-nav-sref="proyectos.vista1" name="proyectos" ui-sref-active="active") Proyectos
 			md-nav-item(md-nav-sref="nosotros" name="nosotros" ui-sref-active="active") Nosotros
-	.logo-container(ui-sref="home" layout="row" layout-align="center center" flex)
+	.logo-container(ui-sref="home" layout="row" layout-align="center center" flex )
 		.logo
 			md-icon(md-svg-src="img/logo.svg")
-		h2 Cada niño una sonrisa
-	.profilebuttons(flex)
+		h2(md-svg-src="img/logo.svg" hide show-gt-md) Cada niño una sonrisa
+	md-button(ng-click="toggleSidenav2('right')" hide-gt-md aria-label="Menu")
+		md-icon account_circle
+	.profilebuttons(hide show-gt-md flex)
 		.noauth(ng-if="!auth")
 			md-button.login( ui-sref="loginyregistro") iniciar sesión
 		.auth(ng-if="auth")
@@ -16,4 +20,5 @@
 			//- 	md-icon menu
 			md-button.perfil(ng-click="menu($event)" style="background-image:url({{usuario.avatar.fb_avatar}})")
 			//- md-button.logout(ng-click="logout();")
-			//- 	md-icon exit_to_app
+			//- 	md-icon exit_to_app 
+	

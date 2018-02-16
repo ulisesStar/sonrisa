@@ -3,18 +3,27 @@
 		md-icon forum
 		.title-content
 			h2 Anecdotas
-	.anecdotas-content
-		md-list
-			md-list-item(ng-repeat="usuario in proyecto.Usuario")
-				md-list-item.md-2-line
-					img.md-avatar(ng-src="{{usuario.fb_avatar}}")
-					.md-list-item-text
-						p {{usuario.Anecdotas.contenido}}
-
-	md-card.comentarios
-		form(layout="column" ng-submit="crearAnecdota(contenido)")
+	md-content
+		md-subheader(class="md-no-sticky") Anecdotas de los usuarios
+		md-card
+			.anecdotas-content
+				md-list
+					md-list-item(class="md-3-line" ng-repeat="anecdota in anecdotas")
+						img(ng-src="{{anecdota.usuario.foto}}" class="md-avatar" alt="anecdota.usuario.nombre")
+						div(class="md-list-item-text" layout="column")
+							h3 {{anecdota.usuario.nombre}}
+							h4 {{anecdota.createdAt | date : "d/M/yy h:mm a" }}
+							p {{anecdota.contenido}}
+							md-divider(ng-if="!$last")
+							md-button(class="md-secondary md-icon-button" ng-if="isAnecdotaUsuario(usuario.id, anecdota.usuario.id)" aria-label="call" ng-click="eliminarAnecdota(anecdota.id)")
+								md-icon delete
+							md-button(class="md-secondary md-icon-button" ng-if="isAnecdotaUsuario(usuario.id, anecdota.usuario.id)" aria-label="call")
+								md-icon edit
+	md-divider
+	md-card(class="comentarios" ng-if="usuarioComento")
+		form(layout="column" ng-submit="crearAnecdota(contenido, usuario.id)")
 			.comentario(layout="row")
-				img.md-avatar(ng-src="{{usuario.fb_avatar}}")
+				img.md-avatar(ng-src="{{usuario.foto}}")
 				md-input-container(flex)
 					label Escribir una anecdota
 					textarea(md-maxlength="200" rows="5" md-select-on-focus ng-model="contenido")

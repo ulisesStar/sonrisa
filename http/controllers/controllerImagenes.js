@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var Jimp = require("jimp");
-
+ 
 var db = require('../relations');
 var imagenes = db.imagenes;
 var proyectos = db.proyectos;
@@ -97,7 +97,7 @@ ex.imagenesProyectosStatus = function(req, res, next){
             // console.log(imagen.id)
             var nuevaimagen = _.split(imagen.imagen, ',', 2);
             Jimp.read(Buffer.from(nuevaimagen[1], 'base64'), function(err, image) {
-                image.resize(502, 300).getBase64("image/jpeg", (err, Buff) => {
+                image.resize(1500, 900).getBase64("image/jpeg", (err, Buff) => {
                     imagen.imagen = Buff;
                     index++;
                     if(index === imagenes.length){

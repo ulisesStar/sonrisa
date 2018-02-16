@@ -17,6 +17,7 @@
     "express": "^4.13.3",
     "express-session": "^1.15.3",
     "express-stylus-middleware": "^0.2.0",
+    "gsap": "^1.20.3",
     "jade": "^1.11.0",
     "jimp": "^0.2.28",
     "jsonwebtoken": "^7.4.3",

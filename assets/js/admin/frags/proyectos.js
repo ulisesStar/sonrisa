@@ -15,6 +15,7 @@ app.controller('proyectosCtrl', function($scope, $rootScope, $state, $stateParam
     }
 
     Proyectos.obtener().then(res => {
+        console.log("hola");
         $scope.proyectos = res.data;
         $scope.$digest();
     })

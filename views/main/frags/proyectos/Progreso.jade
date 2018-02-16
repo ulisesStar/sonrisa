@@ -21,6 +21,16 @@
 					md-card(md-whiteframe="1")
 						md-card-content
 							p {{proyecto.descripcion}}
+				md-subheader Objetivos del Proyecto
+				md-list
+					md-list-item( ng-repeat="objetivo in objetivos" class="noright" md-colors="{background: 'red'}")
+						md-checkbox(
+						ng-disabled="true"
+						ng-model="objetivo.status"
+						ng-change="cambiarStatusObjetivo(objetivo)"
+						ng-true-value="'true'"
+						ng-false-value="'false'" ) 
+						p {{objetivo.objetivo}}
 		h4 ¡Participa!
 		section(layout="row" style="width: 100%")
 			div(flex)

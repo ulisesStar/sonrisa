@@ -90,10 +90,9 @@ header .menu .logo-container .logo {
   background-color: #fff;
   display: flex;
   border-radius: 100px;
-}
-header .menu .logo-container .logo md-icon {
-  height: 30px;
-  width: 30px;
+/* md-icon
+                    height: 30px
+                    width: 30px */
 }
 header .menu .md-nav-bar {
   height: 50px;
@@ -217,6 +216,9 @@ footer background-color grey .md-button {
 }
 .home .home-container .left .left-content {
   margin: auto;
+}
+.home .anecdotasHome {
+  margin: 0 auto;
 }
 .proyecto section {
   margin-top: 100px;
@@ -369,11 +371,17 @@ footer background-color grey .md-button {
 .proyecto .anecdotas .anecdotas-content {
   margin: 50px 0;
 }
-.proyecto .anecdotas .anecdotas-content md-list md-list-item {
+.proyecto .anecdotas .anecdotas-content md-list-item {
   min-height: 60px !important;
 }
-.proyecto .anecdotas .anecdotas-content md-list md-list-item img {
+.proyecto .anecdotas .anecdotas-content md-list-item img {
   margin: auto 20px;
+}
+.proyecto .anecdotas .anecdotas-content md-list-item div h3 {
+  color: #000;
+}
+.proyecto .anecdotas .anecdotas-content md-list-item div p {
+  color: #000;
 }
 .comentarios form {
   margin: 0;

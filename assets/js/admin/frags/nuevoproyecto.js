@@ -1,6 +1,6 @@
 var app = angular.module('myapp');
 
-app.controller('nuevoproyectoCtrl', function($scope, $state, Proyectos, Campana, Area) {
+app.controller('nuevoproyectoCtrl', function($scope, $state, Proyectos, Campana, Area, alertas) {
 
     $scope.proyecto = {
         pendiente : {},
@@ -17,7 +17,7 @@ app.controller('nuevoproyectoCtrl', function($scope, $state, Proyectos, Campana,
         $scope.areas = data.data;
         console.log(data);
     })
-
+ 
     $scope.cambiar = function(status) {
         switch (status) {
             case 1:
@@ -36,14 +36,12 @@ app.controller('nuevoproyectoCtrl', function($scope, $state, Proyectos, Campana,
 
     $scope.submit = (proyecto) => {
 
-        console.log(proyecto)
-        console.log($scope.proyecto)
-
         Proyectos.crear(proyecto).then(res => {
-            console.log(res)
-        })
-
+            alertas.mostrarToastEstandar("Proyecto creado");
+            console.log(res.proyecto)
+            let nombre  =  _.snakeCase(proyecto.nombre);
+            $state.go('proyecto', { id : proyecto.id, status: proyecto.status, nombre : nombre } )
+        });
+        
     }
-
-
 });

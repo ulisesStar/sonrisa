@@ -1,5 +1,6 @@
 md-card(ng-init="obtenerCampana()")
-    
+    img(ng-src="{{campana.logo}}" class="md-card-image" alt="Washed Out")
     h1 {{campana.nombre}}
     h3 {{campana.descripcion}}
     h4 {{campana.fecha | date: "MM/dd/yyyy"}}
+    

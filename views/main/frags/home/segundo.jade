@@ -1,10 +1,10 @@
-.anecdotas(flex="70")
+.anecdotasHome(flex="50")
 	md-list
-		md-card(ng-repeat="anecdota in anecdotas")
+		md-card(ng-repeat="anecdota in anecdotas" center)
 			md-list-item.md-2-line
-				img.md-avatar(ng-src="{{anecdota.imagen}}")
+				img.md-avatar(ng-src="{{anecdota.usuario.foto}}")
 				.md-list-item-text
-					h4 {{anecdota.nombre}}
-					p {{anecdota.comentario}}
+					h4 {{anecdota.usuario.nombre}}
+					p {{anecdota.contenido}}
 				.md-secondary
-					p {{anecdota.proyecto}}
+					p {{anecdota.Proyecto.nombre}}

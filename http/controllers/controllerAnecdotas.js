@@ -1,8 +1,10 @@
 var db = require('../relations');
 var anecdotas = db.anecdotas;
 var usuario = db.usuario;
-
+var proyectos = db.proyectos;
 var ex = module.exports = {};
+
+var fecha_actual = new Date();
 
 ex.create = function(req, res, next) {
 
@@ -49,7 +51,27 @@ ex.read = function(req, res, next) {
             res.status(200).jsonp(result);
         });
     } else {
-        anecdotas.findAll().then(function(result) {
+        anecdotas.findAll({
+            where:{
+                createdAt: {
+                    $lte: fecha_actual
+                  }
+            },
+            order:[
+                ['createdAt', 'DESC'],
+            ],
+            limit : 5,
+            include : [
+                {
+                    model: usuario,
+                    attributes: ['id', 'nombre','foto']
+                },
+                {
+                    model: proyectos,
+                    attributes: ['nombre']
+                }
+            ]
+        }).then(function(result) {
             res.status(200).jsonp(result);
         });
     }
@@ -64,7 +86,10 @@ ex.anecdotaproyecto = function(req, res, next) {
             id_proyecto : id
         },
         include : [
-            { model: usuario }
+            {
+                model: usuario,
+                attributes: ['id', 'nombre','foto']
+            }
         ]
     }).then(function(result) {
         res.status(200).jsonp(result);

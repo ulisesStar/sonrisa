@@ -20,6 +20,7 @@ var ubicacion = require('./db/modeloUbicacion')(conector);
 var aportaciones = require('./db/modeloAportaciones')(conector);
 var multimedia = require('./db/modeloMultimedia')(conector);
 var portada = require('./db/modeloPortada')(conector);
+var objetivo = require('./db/modeloObjetivos')(conector);
 
 var avatar = require('./db/modeloAvatar')(conector);
 
@@ -75,6 +76,9 @@ proyectos.hasMany(imagenes , {foreignKey: 'id_proyecto'});
 avatar.belongsTo(usuario , {foreignKey: 'id_usuario'});
 usuario.hasOne(avatar , {foreignKey: 'id_usuario'});
 
+objetivo.belongsTo(proyectos, {foreignKey: 'id_proyecto'});
+proyectos.hasMany(objetivo, {foreignKey: 'id_proyecto'});
+
 module.exports.anecdotas = anecdotas;
 module.exports.areas = areas;
 module.exports.campanas = campanas;
@@ -92,5 +96,5 @@ module.exports.materiales = materiales;
 module.exports.ubicacion = ubicacion;
 module.exports.aportaciones = aportaciones;
 module.exports.portada = portada;
-
+module.exports.objetivo = objetivo;
 module.exports.avatar = avatar;

@@ -30,6 +30,7 @@ app.service('mdDialog', function($mdDialog) {
 
     function DialogController($scope, $mdDialog) {
         $scope.hide = function() {
+            console.log(teste);
             $mdDialog.hide();
         };
 

@@ -1,6 +1,6 @@
 var app = angular.module('myapp');
 
-app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $stateParams, $localStorage, $mdDialog, ProyectosProgreso, Evento, Imagen, Usuario, Anecdota, Material, Portada, Ubicacion, Facebook, AuthService, Aportaciones) {
+app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $stateParams, $localStorage, $mdDialog, ProyectosProgreso, Evento, Imagen, Usuario, Anecdota, Material/* , Portada */, Ubicacion, Facebook, AuthService, Aportaciones, Objetivos) {
 
     $scope.loaderProyectoProgreso = true;
     if($stateParams.proyecto === null){
@@ -11,7 +11,8 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
         var status = 2;
 
         if($scope.usuario === undefined){
-            AuthService.token($localStorage.token).then(data => {
+            var token = $localStorage.token;
+            AuthService.token(token).then(data => {
                 $scope.usuario = data.user;
             })
         }
@@ -29,14 +30,13 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
 
         ProyectosProgreso.obtener(idproyecto).then(res => {
             $scope.proyecto = res.data;
-            console.log(res);
             $scope.loaderProyectoProgreso = false;
 
             // _.map(data.data.Ubicacion, ubcacionesft)
             // function ubcacionesft(n) {
             //     $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
             // }
-
+ 
             // data.data.materiales.forEach(material => {
             //     material.recaudado = 0;
             //     let index
@@ -50,17 +50,15 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
 
             return res.data.id
         }).then(id => {
-
-            Portada.obtener(id).then(res => {
+            Imagen.obtenerPortada(id).then(res => {
                 $scope.portada = res.data;
-            })
+            });
 
             Imagen.obtener(id).then(res => {
 				$scope.imagenes = res.data;
-				console.log(res);
 				$scope.$digest();
 
-			})
+			});
 
             Ubicacion.obtenerConProyecto(id).then(res => {
                 $scope.ubicaciones = res.data;
@@ -69,14 +67,18 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
                 _.map(result, function(n) {
                     $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
                 })
-            })
+            });
 
             Anecdota.obtener(id).then(res => {
                 $scope.anecdotas = res.data;
+            });
+            
+            Objetivos.obtenerAll(id).then(data => {
+                $scope.objetivos = data.data;
             })
 
-            obtenerMateriales()
-            obtenerEventos()
+            obtenerMateriales();
+            obtenerEventos(id);
 
         })
     }
@@ -88,8 +90,7 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
         })
     }
 
-    function obtenerEventos() {
-        console.log('voy')
+    function obtenerEventos(id) {
         Evento.proyecto(id).then(res => {
             $scope.eventos = res.data;
             $scope.$digest()
@@ -184,16 +185,47 @@ app.controller('proyectosProgresosCtrl', function($q, $scope, $state, $statePara
 
 	$scope.crearAnecdota = function(contenido){
 
-		let anecdota = {
+		var x= {
 			contenido : contenido,
 			id_usuario : $scope.usuario.id,
 			id_proyecto : idproyecto
 		}
 
-		Anecdota.crear(anecdota).then(data => {
-			console.log(data);
-		})
-	}
+		Anecdota.crear(x).then(data => { 
+            Anecdota.obtener(idproyecto).then(res => {
+                $scope.anecdotas = res.data;
+                $scope.$digest();
+            });
+        })
+    }
+    
+    $scope.isAnecdotaUsuario  = function(idUsuario, idUsuarioComentario){
+        if(idUsuario==idUsuarioComentario){
+            return true
+        }else{
+            return false;
+        }
+    };
+
+    $scope.eliminarAnecdota = function(id){
+        $mdDialog.show(
+            $mdDialog.confirm()
+            .title('¿Seguro que quiere eliminar este comentario?')
+            .ok('Si')
+            .cancel('Cancelar')
+        ).then(result => {
+
+            Anecdota.eliminar(id).then(res => {
+                Anecdota.obtener(idproyecto).then(res => {
+                    $scope.anecdotas = res.data;
+                    $scope.$digest();
+                });
+            });
+
+        }, function() {
+            console.log('no confirmo')
+        })
+    };
 
     $scope.facebook = function(){
 

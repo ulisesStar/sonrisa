@@ -15,8 +15,10 @@ ex.create = function(req, res, next) {
 
         if (!result) {
             // Item not found, create a new one
-            portada.create(data).then(function(result) {
-                res.status(200).jsonp(result);
+            portada.create(data).then(function(resultado) {
+                res.status(200).jsonp(resultado);
+                console.log("aqui");
+                console.log(resultado);
             });
 
         } else {
@@ -24,8 +26,10 @@ ex.create = function(req, res, next) {
                 where : {
                     id_proyecto : data.id_proyecto
                 }
-            }).then(function(result) {
-                res.status(200).jsonp(result);
+            }).then(function(resultado) {
+                console.log(data);
+                console.log("aqui");
+                res.status(200).jsonp(data);
             });
         }
 

@@ -195,7 +195,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 	}).state('progreso', {
 		url: '/progreso/:proyecto/:nombre',
 		params: {
-			'proyecto' : null,
+			'proyecto' : null, 
 			'nombre' : null
 		},
 		views: {

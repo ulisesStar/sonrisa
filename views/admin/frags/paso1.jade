@@ -12,11 +12,11 @@ section
             md-card-content(layout="row")
                 md-input-container(flex)
                     label Areas
-                    md-select(ng-model="proyecto.Id_area")
+                    md-select(ng-model="proyecto.area_actual")
                         md-option(ng-value="area.id" ng-repeat="area in areas") {{area.nombre}}
                 md-input-container(flex)
                     label Programas
-                    md-select(ng-model="proyecto.Id_campana")
+                    md-select(ng-model="proyecto.campana_actual")
                         md-option(ng-value="campana.id" ng-repeat="campana in campanas") {{campana.nombre}}
                 md-input-container(flex)
                     label Status

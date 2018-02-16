@@ -1,6 +1,14 @@
-app.controller('mainCtrl', function($scope, $rootScope, $mdPanel, $state, $http, $mdDialog, AuthService, $localStorage, Usuario, $window) {
+app.controller('mainCtrl', function($scope, $rootScope, $mdPanel,$mdSidenav, $state, $http, $mdDialog, AuthService, $localStorage, Usuario, $window) {
 
     $scope.auth = false;
+    
+    $scope.toggleSidenav = function(menuId) {
+        $mdSidenav(menuId).toggle();
+      };
+    
+    $scope.toggleSidenav2 = function(menuId) {
+        $mdSidenav(menuId).toggle();
+      };
 
     if($localStorage.token != null){
         $scope.auth = true;

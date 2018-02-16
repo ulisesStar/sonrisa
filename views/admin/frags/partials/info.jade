@@ -26,6 +26,21 @@ section.info
                     label Descripcion
                     textarea(ng-model="proyecto.descripcion" md-maxlength="150" rows="5")
             md-divider
+            md-subheader(class="md-no-sticky") Objetivos del proyecto
+            md-button(class="md-secondary" md-colors="{background: 'green'}" ng-click="dialogObjetivo()")
+                md-tooltip(md-direction='right') Close Navigation
+                md-icon add
+            md-list
+                md-list-item( ng-repeat="objetivo in objetivos" class="noright")
+                    md-checkbox(
+                    ng-model="objetivo.status"
+                    ng-change="cambiarStatusObjetivo(objetivo)"
+                    ng-true-value="'true'"
+                    ng-false-value="'false'" ) 
+                    p {{objetivo.objetivo}}
+                    md-button(class="md-secondary md-fab" md-colors="{background: 'red'}" ng-click="eliminarObjetivo(objetivo.id, $index)")
+                        md-icon delete
+            md-divider
             md-subheader Información relacionada con el status
             .md-padding
                 .pendiente(layout="column" flex ng-if="proyecto.status_actual === 1")

@@ -1,1 +1,125 @@
 # 1 DIC - Se compuso lo de los eventos
+
+22 enero 2018 - Malaga
+     Archivo assets/js/servicios.j
+	-La funcion portadaBorrar no se esta utilizando ademas que esta mal programado
+	-La funcion de obtenerPortada(id) del servicio Imagen y la funcion obtener(id) del servicio Portada hacen lo mismo, ademas que la funcion obtener(id) del servicio Portada solo se usa 3 veces en todo el sistema( en assets/main/frags/: en los archivos proyectoPendiente, proyectoProgreso, ProyectoTerminado ). Ademas que es la unica funcion que se usa de este servicio. Se cambiaó los archivos proyectosPendientes.js, proyectosPoogreso.js y proyectoTerminado para que utilicen el servicio Imagen y ya no el servicios portada.
+
+    Archivo view/admin/frags/paso1.jade
+	-en los md-select, ng-model="proyectos.ID_area" se cambio a ng-model="proyectos.area_actual" y ng-model="proyectos.ID_campana" se cambio por ng-model="proyectos.campana_actual". Ahora al crear un proyecto ya guarda el area y el programa al que pertenece
+
+    Archivo assest/js/main/frags/proyectosProgreso.js
+	a la funcion obtenerEventos() se cambio por obtenerEventos(id), se le paso al parametro id ya que sin el no obtenia nigun evento. Ya se muestran los eventos en el perfil de los proyectos en el frontend
+
+    Archivo assets/js/admin/frags/nuevoproyecto.js en la funcion submit se añadio las alertas de que se creó el proyecto y la redireccion a hacia admin/proyectos
+
+23 enero 2018 - Malaga
+    Archivo assets/js/main/frags/proyectosTerminados.js 
+    -se acompleto el codigo para que mostrará en el perfil de proyectos termandos todos los datos relacionados con este (esta similar a proyectosProjeso.js y proyectosPendientes.js)
+
+    Archivo views/main/frags/proyectos/Terminado.js 
+    -se acompletó el codigo para que mostrará de forma correcta los detalles del proyecto terminado.
+
+25 enero 2018 - Malaga 
+    Archivo assets/js/servicios.js
+    -Se arregló el metdo crear(anecdota del servicio Anecdota), variable anecdota no definida
+    
+26 enero 2018 - Malaga
+	Archivo views/main/frags/proyectos
+	- Se modifico para que cargara las anecdotas y las mostrará en el frontend, aunque se debe modificar para que cargue la foto del perfil de facebook del usuario
+	
+	Archivo assests/js/main/frags/proyectosTerminados.js
+	-Se agrego la funcion crearAnecdota
+	-Se agrego la funcion obtener del servicio Anecdota a la promesaobtener del servicio ProyectosTerminado
+	
+	Archivo http/controllers/controllerAnecdotas.js
+	-se modifico el medoto anecdotaproyecto para que solo devolviera el id,nombre y foto del usuario
+
+
+	Archivo views/main/frags/home/segundo.js
+	-se le agrego una clase llamada anecdotas al div principal de este archivo, para poder centrar las anecdotas que estan el home
+	
+	Archivo assets/stylus/main.styl
+	-a la clase home.anectodasHome se le agrego un margin 0 auto, para centrar las anectodas en el home
+
+29 enero 2018 - Malaga
+	http/controllers/controllerAnecdota.js
+	-modificación del metodo read. Al buscar todas las anecdotas busca las 5 anecdotas mas recientes
+	
+	assets/js/main/frags/proyectosTerminados.js y assets/js/main/frags/proyectosProgreso.js
+	-Al crear una enecdota se añadió que se volvierá a obtener las anecdotas para que actualizará la vista . (linea 90)
+	
+
+2 febrero 2018 - Malaga
+	Archivo view/admin/frags/partial/imagenes.jade
+	- al boton que tupo submit(linea 29) se le agrego un evento clik llamado reseteView()
+
+	Archivo assets/admin/admin.controller.js
+	- se le añidio una funcion resetView(linea 434)
+
+	Archivo assets/js/admin/frags/nuevoproyecto.js
+	- a la funcion submit se le añadio mas funciones para que cuando se creará el nuevo proyecto se dirigiera a este nuevo proyecto creado(lineas 42 y 43)
+	
+
+6 febrero 2018 - Malaga
+	Archivo assets/admin/admin.controller.js
+	- Se eliminaron las funciones Obtenerareas y obtenercamapas, en su lugar se llaman directamente a los servicios con sus respectivas funciones Area.obtener y Campana.obtenerCampana() para obtener las areas y amapañas
+	- A la funcion nuevaArea se modificò para que se le pasarà un objeto area
+	-En las funciones nuevaArea y eliminarArea se modificaron para que utilizaran el servicio Area ya que usaban $http
+	-En la funcion eleminar area se acompleto el codigo para que actualizarà las areas al regresar
+
+	
+	Archivo assets/js/servicios.j
+	- Al servicio Area se le agregò la funcion crear(area) para que se crearà una area
+
+7 febrero 2018 - Malaga
+	
+	Archivo assets/js/admin.controller.js
+	-En las funciones CampanaDialog y AreaDialog se dejo de usar el el servicio mdDialog para implementar el uso de los dialos por separado con un controlador personalizado para cada dialog(linea 139 y 231)
+	
+	Carpeta http/db/
+		-se creò un nuevo modelo llamado modeloObjetivos
+	carpeta http/controllers/
+		-se creò un nuevo controllador llamado controllerObjetivos
+	carpeta http/routes/
+		-se creo nuevas rutas llamado routesObjetivos
+
+	Archivo http/relations.js
+	-Se importò el modelo Objetivo a las relaciones(linea 23)
+	-se hizo una relaciòn belongsTo con los modelos objetivos-proyectos (linea 79)
+	-se hizo una relacion hasMany con los modelos proyectos-objetivo
+	-Se exportò el modelo objetivo(linea 99)
+
+	Archivo main.js
+	-Se importo la ruta del modelo objetivo(linea 34)
+	-Se agregò la ruta de los objetivos a la app (linea 86)
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+    

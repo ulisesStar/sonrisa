@@ -31,6 +31,7 @@ var materiales = require('./http/routes/routeMateriales');
 var ubicacion = require('./http/routes/routeUbicacion');
 var aportaciones = require('./http/routes/routeAportaciones');
 var multimedia = require('./http/routes/routeMultimedia');
+var objetivos = require('./http/routes/routeObjetivos');
 
 
 
@@ -82,6 +83,7 @@ app.use('/', ubicacion);
 app.use('/', aportaciones);
 app.use('/', multimedia);
 app.use('/', require('./http/routes/routePortada'));
+app.use('/', objetivos);
 
 
 app.use(lessMiddleware(__dirname + '/assets'));

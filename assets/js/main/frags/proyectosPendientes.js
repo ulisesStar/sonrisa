@@ -1,6 +1,6 @@
 var app = angular.module('myapp');
 
-app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $stateParams, $rootScope, $http, $mdDialog, $localStorage, ProyectosPendientes, Evento, Imagen, Aportaciones, Material, Usuario, Anecdota, Portada, Ubicacion, AuthService) {
+app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $stateParams, $rootScope, $http, $mdDialog, $localStorage, ProyectosPendientes, Evento, Imagen, Aportaciones, Material, Usuario, Anecdota, Ubicacion, Objetivos, AuthService) {
 
 	$scope.loaderProyectoPendiente = true;
     if ($stateParams.proyecto === null) {
@@ -33,21 +33,11 @@ app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $s
             $scope.loaderProyectoPendiente = false;
             $scope.$digest()
 
-
-			// data.materiales.forEach(material => {
-            //     material.recaudado = 0;
-			// 	let index
-            //     material.Usuario.forEach(user => {
-            //         index++
-            //         material.recaudado = material.recaudado + user.Aportaciones.contribucion;
-            //     })
-            // })
-
             return res.data.id
 
         }).then(id => {
-
-            Portada.obtener(id).then(res => {
+            
+            Imagen.obtenerPortada(id).then(res => {
                 $scope.portada = res.data;
             })
 
@@ -63,6 +53,10 @@ app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $s
                 _.map(result, function(n) {
                     $scope.markers.push({latitude: n.latitude, longitude: n.longitude});
                 })
+            })
+
+            Objetivos.obtenerAll(id).then(data => {
+                $scope.objetivos = data.data;
             })
 
 
@@ -98,7 +92,7 @@ app.controller('proyectosPendientesCtrl', function($interval, $scope, $state, $s
 				.textContent('Empieza por introducir su titulo')
 				.placeholder('Piezas para contribuir')
 				.ok('Muchas Gracias por tu donativo')
-				.cancel('Me arrepenti')
+				.cancel('Me arrepentí')
 			).then(result => {
 
                 Aportaciones.unir({

@@ -23,6 +23,13 @@ app.service('ProyectosTerminado', function($http, alertas, $q) {
     this.obtener = function(id) { return axios('/data/proyecto/terminado/' + id) }
 });
 
+app.service('Objetivos', function(){
+    this.obtenerAll = function(idProyecto) {return axios('/data/objetivoXproyecto/' + idProyecto)}
+    this.editarObjetivo = function(objetivo) {return axios.put('/data/objetivos/' + objetivo.id, objetivo)}
+    this.eliminarObjetivo = function(idObjetivo) { return axios.delete('/data/objetivos/' + idObjetivo)}
+    this.agregarObjetivo =  function(objetivo) {return axios.post('/data/objetivos/', objetivo)}
+});
+
 app.service('Imagen', function($http, alertas, $q) {
 
     this.crear = function(imagen) { return axios.post('data/imagenes', imagen) }
@@ -31,16 +38,9 @@ app.service('Imagen', function($http, alertas, $q) {
     this.one = function(id) { return axios('/data/imagenes/' + id) }
     this.eliminar = function(id) { return axios.delete('/data/imagenes/' + id) }
     this.obtenerStatus = function(proyecto, status) { return axios('data/imagenesProyectosStatus/' + proyecto + '/' + status) }
-    this.portadaBorrar = function(id, imagen) { return axios.post('/data/portada/' + id, imagen) }
+    //this.portadaBorrar = function(id, imagen) { return axios.delete('/data/portada/' + id, imagen) }
     this.portadaCrear = function(imagen) { return axios.post('/data/portada', imagen) }
 	this.obtenerPortada = function(id) { return axios('/data/portada/' + id) }
-
-});
-
-app.service('Portada', function($http, alertas, $q) {
-    this.portadaBorrar = function(id, imagen) { return axios.post('/data/portada/' + id, imagen) }
-    this.portadaCrear = function(imagen) { return axios.post('/data/portada', imagen) }
-    this.obtener = function(id) { return axios('/data/portada/' + id) }
 
 });
 
@@ -66,6 +66,7 @@ app.service('Evento', function($http, alertas, $q) {
 });
 
 app.service('Area', function($http, alertas, $q) {
+    this.crear = function(area) {return axios.post('/data/areas', area)}
     this.obtenerLite = function() { return axios('/data/areasLite') }
     this.obtener = function() { return axios('/data/areas') }
     this.unir = function(area, proyecto) { return axios.post('/data/areas/' + area + '/' + proyecto) }
@@ -95,8 +96,10 @@ app.service('Aportaciones', function($http, alertas, $q) {
 });
 
 app.service('Anecdota', function($http, alertas, $q) {
+    this.obtenerAll = function(){ return axios('/data/anecdota')}
     this.obtener = function(id) { return axios('/data/anecdotaproyecto/' + id) }
-    this.crear = function(id) { return axios.post('/data/anecdota/', anecdota) }
+    this.crear = function(anecdota) { return axios.post('/data/anecdota/', anecdota) }
+    this.eliminar = function(id){return axios.delete('/data/anecdota/'+ id)}
 });
 
 

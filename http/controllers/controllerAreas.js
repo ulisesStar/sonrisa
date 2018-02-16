@@ -6,7 +6,7 @@ var ex = module.exports = {};
 
 ex.create = function (req, res, next) {
 
-    var data = req.body;
+    var data = req.body; 
     areas.create(data)
             .then(function (result) {
                 res.status(200).jsonp(result);
